@@ -1,43 +1,39 @@
-# Astro Starter Kit: Minimal
+# Real Estate Listing App Astro + Cloudflare
 
-```sh
-pnpm create astro@latest -- --template minimal
+Cost effective full stack web app real estate listings powered by Astro and Cloudflare Pages. Server Side Rendered with Astro, and Database with Turso, and Drizle Orm.
+
+## Features
+
+- Server Side Rendered Page with Astro and Cloudflare Adapter.
+- Database with Turso.
+- Authentication with Firebase.
+
+## Tech Stack
+
+- Astro
+- Tailwind CSS
+- Cloudflare Pages
+- Turso
+- Firebase
+- Drizzle ORM
+
+## Getting Started
+
+1. Clone the repo
+2. Install dependencies
+3. Create a `.env` file in the root directory and add the following variables:
+
+```
+TURSO_CONNECTION_URL=
+TURSO_AUTH_TOKEN=
+
+PUBLIC_FIREBASE_API_KEY=
+PUBLIC_FIREBASE_AUTH_DOMAIN=
+PUBLIC_FIREBASE_STORAGE_BUCKET=
+PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+PUBLIC_FIREBASE_APP_ID=
+PUBLIC_FIREBASE_MEASUREMENT_ID=
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+4. Run `npm run dev` to start the development server
+5. Open [http://localhost:4321](http://localhost:4321) to view the app
