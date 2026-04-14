@@ -1,0 +1,48 @@
+---
+import {AuthButton} from "./AuthButton";
+
+const { pathname } = Astro.url;
+// Normalize path to handle trailing slashes
+const normalizedPath = pathname.replace(/\/$/, "") || "/";
+
+export const navItems = [
+    { name: 'Home', href: '/' },
+    { name: 'Listings', href: '/listings' },
+    { name: 'About', href: '/about' },
+    { name: 'Contact', href: '/contact' },
+]
+
+const navItemsWithLinksState = navItems.map(item => ({
+    ...item,
+    isActive: item.href === "/" 
+        ? normalizedPath === "/" 
+        : normalizedPath.startsWith(item.href)
+}));
+---
+
+<nav class="max-h-16 py-4 px-6 border-b border-gray-100">
+    <div class="flex gap-8 items-center justify-between max-w-7xl mx-auto">
+        <!-- title -->
+        <div>
+             <h1 class="text-primary font-bold text-2xl">RealEstate</h1>
+        </div>
+        
+        <!-- menu -->
+        <div class="flex gap-6 items-center">
+            {
+                navItemsWithLinksState.map((item) => (
+                    <a 
+                        href={item.href} 
+                        class={`transition-colors ${item.isActive ? 'text-primary font-semibold' : 'text-muted-foreground hover:text-primary'}`}
+                        aria-current={item.isActive ? 'page' : undefined}
+                    >
+                        {item.name}
+                    </a>
+                ))
+            }
+        </div>
+
+        <!-- login -->
+         <AuthButton client:load />
+    </div>
+</nav>

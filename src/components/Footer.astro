@@ -1,0 +1,27 @@
+---
+import { navItems } from "./Navbar.astro";
+const year = new Date().getFullYear();
+---
+<footer class="max-h-32 border-t border-gray-100">
+    <div class="flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto px-6 py-8 md:px-0 gap-8">
+        <div>
+            <h3 class="font-bold text-primary text-xl">RealEstate</h3>
+            <div class="text-sm text-muted-foreground">
+            <p>&copy; {year} RealEstate by Alfath Muqoddas architecting the future of home</p>
+            <p>All rights reserved</p>
+            </div>
+        </div>
+        <div class="flex gap-2 text-sm text-muted-foreground">
+            {
+                navItems.map((item) => (
+                    <a 
+                        href={item.href} 
+                        
+                    >
+                        {item.name}
+                    </a>
+                ))
+            }
+        </div>
+    </div>
+</footer>

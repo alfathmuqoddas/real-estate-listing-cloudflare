@@ -7,13 +7,11 @@ import cloudflare from "@astrojs/cloudflare";
 
 import preact from "@astrojs/preact";
 
-// https://astro.build/config
 export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-
   output: "server",
   adapter: cloudflare(),
-  integrations: [preact()],
+  integrations: [preact({ compat: true })],
 });
