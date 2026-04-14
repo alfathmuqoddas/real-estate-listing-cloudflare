@@ -2,6 +2,10 @@
 import {AuthButton} from "./AuthButton";
 
 const { pathname } = Astro.url;
+
+const {user} = Astro.locals;
+
+const isLoggedIn = !!user
 // Normalize path to handle trailing slashes
 const normalizedPath = pathname.replace(/\/$/, "") || "/";
 
@@ -43,6 +47,6 @@ const navItemsWithLinksState = navItems.map(item => ({
         </div>
 
         <!-- login -->
-         <AuthButton client:load />
+         <AuthButton client:load isLoggedIn={isLoggedIn} />
     </div>
 </nav>

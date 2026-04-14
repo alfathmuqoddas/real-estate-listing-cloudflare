@@ -2,7 +2,11 @@
 import MainLayout from "@/layout/MainLayout.astro";
 
 export const prerender = false;
+const {user} = Astro.locals;
 ---
 <MainLayout>
 	Hello World
+	
+	<p>Logged in as {user?.name}</p>
+	
 </MainLayout>
