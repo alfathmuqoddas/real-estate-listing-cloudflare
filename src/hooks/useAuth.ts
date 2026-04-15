@@ -14,17 +14,18 @@ export const useAuth = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          token: token,
+          token,
         }),
-        credentials: "include",
       });
 
-      if (response.ok) {
-        alert("Login successful, redirecting...");
-        window.location.reload();
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Something went wrong during sync");
       }
-    } catch (error) {
-      console.error("Login failed: ", error);
+
+      window.location.reload();
+    } catch {
+      // console.error("Login failed: ", error);
       alert("Login failed, please try again.");
     }
   };

@@ -17,7 +17,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
-  } catch (error) {
-    return new Response("Internal Error", { status: 500 });
+  } catch (error: any) {
+    console.error("🔥 API ROUTE CRASHED:", error);
+    return new Response(
+      JSON.stringify({ error: error.message || "Internal Server Error" }),
+      { status: 500, headers: { "Content-Type": "application/json" } },
+    );
   }
 };
