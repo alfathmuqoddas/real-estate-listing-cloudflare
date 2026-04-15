@@ -23,7 +23,7 @@ export const useAuth = () => {
         throw new Error(errorData.error || "Something went wrong during sync");
       }
 
-      window.location.reload();
+      window.location.replace("/");
     } catch {
       // console.error("Login failed: ", error);
       alert("Login failed, please try again.");

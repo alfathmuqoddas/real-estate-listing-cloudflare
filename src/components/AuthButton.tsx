@@ -2,7 +2,7 @@ import { Button } from "./ui/button";
 import { useAuth } from "@/hooks/useAuth";
 
 export const AuthButton = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
-  const { handleLogin, handleLogout } = useAuth();
+  const { handleLogout } = useAuth();
   return (
     <div className={"flex gap-2 items-center"}>
       {isLoggedIn ? (
@@ -11,10 +11,15 @@ export const AuthButton = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
         </Button>
       ) : (
         <>
-          <Button variant="outline" onClick={handleLogin}>
+          <Button
+            variant="outline"
+            onClick={() => (window.location.href = "/auth/login")}
+          >
             Login
           </Button>
-          <Button>Sign up</Button>
+          <Button onClick={() => (window.location.href = "/auth/register")}>
+            Sign up
+          </Button>
         </>
       )}
     </div>

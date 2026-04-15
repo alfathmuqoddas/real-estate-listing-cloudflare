@@ -1,0 +1,30 @@
+---
+import AppLayout from '@/layout/AppLayout.astro';
+import MainLayout from '@/layout/MainLayout.astro';
+import {AuthCard} from '@/components/AuthCard';
+
+
+export const prerender = true
+
+export function getStaticPaths() {
+  return [
+    { params: { type: "login" } },
+    { params: { type: "register" } },
+  ];
+}
+
+const { type } = Astro.params;
+
+if (!["login", "register"].includes(type)) {
+  throw new Error("Invalid auth type");
+}
+---
+<AppLayout>
+    <MainLayout>
+    <section class="flex items-center justify-center min-h-[calc(100vh-12rem)]">
+        <div class="w-full max-w-sm">
+        <AuthCard type={type} client:load/>
+        </div>
+    </section>
+    </MainLayout>
+</AppLayout>
