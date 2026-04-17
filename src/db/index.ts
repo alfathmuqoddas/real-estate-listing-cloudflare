@@ -1,4 +1,4 @@
-import { drizzle } from "drizzle-orm/libsql";
+import { drizzle } from "drizzle-orm/libsql/web";
 import { createClient } from "@libsql/client/web";
 
 const url = import.meta.env.PROD
@@ -10,8 +10,8 @@ const authToken = import.meta.env.PROD
   : undefined;
 
 const client = createClient({
-  url: url!,
-  authToken: authToken,
+  url: import.meta.env.TURSO_CONNECTION_URL!,
+  authToken: import.meta.env.TURSO_AUTH_TOKEN,
 });
 
 export const db = drizzle(client);

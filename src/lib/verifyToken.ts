@@ -1,11 +1,17 @@
 // src/lib/auth-utils.ts
-import { jwtVerify, createRemoteJWKSet } from "jose";
+import { jwtVerify, createLocalJWKSet } from "jose";
 
-const JWKS_URL = new URL(
-  "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com",
-);
+let cachedJWKS: any = null;
 
-const JWKS = createRemoteJWKSet(JWKS_URL);
+async function getJWKS() {
+  if (cachedJWKS) return cachedJWKS;
+
+  const response = await fetch(
+    "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com",
+  );
+  cachedJWKS = await response.json();
+  return cachedJWKS;
+}
 
 export async function verifyToken(token: string) {
   const projectId = import.meta.env.FIREBASE_PROJECT_ID;
@@ -14,6 +20,9 @@ export async function verifyToken(token: string) {
     console.error("❌ Auth Error: FIREBASE_PROJECT_ID is not defined.");
     return null;
   }
+
+  const jwks = await getJWKS();
+  const JWKS = createLocalJWKSet(jwks);
 
   try {
     const { payload } = await jwtVerify(token, JWKS, {
