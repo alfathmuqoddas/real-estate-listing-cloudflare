@@ -12,7 +12,9 @@ export const propertiesTable = sqliteTable("properties", {
   propertyTitle: text("property_title").notNull(),
   propertyDeskripsi: text("property_deskripsi").notNull(),
   propertyPrice: integer("property_price").notNull(),
-  listingType: text("listing_type", { enum: ["sale", "rent"] }).notNull(),
+  propertyListingType: text("listing_type", {
+    enum: ["sale", "rent"],
+  }).notNull(),
   propertyLuasTanah: integer("property_luas_tanah").notNull(),
   propertyLuasBangunan: integer("property_luas_bangunan").notNull(),
   propertyKamarMandi: integer("property_kamar_mandi").notNull(),
@@ -38,9 +40,11 @@ export const propertiesTable = sqliteTable("properties", {
   propertyAddressLon: real("property_address_lon"),
 
   // Agent
-  propertyAgentId: integer("property_agent_id")
+  propertyAgentId: text("property_agent_id")
     .notNull()
     .references(() => users.id),
+
+  status: text("status", { enum: ["active", "inactive"] }).default("inactive"),
 
   // Timestamps
   createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(
