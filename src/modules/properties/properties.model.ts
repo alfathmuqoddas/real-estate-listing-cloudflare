@@ -5,41 +5,41 @@ export const users = usersTable;
 
 export const propertiesTable = sqliteTable("properties", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  title: text("title").notNull(), // e.g., "Rumah Minimalis di BSD"
-  description: text("description"),
-
-  // Pricing & Transaction
-  price: integer("price").notNull(),
+  propertyType: text("property_type", { enum: ["Rumah", "Apartemen"] }),
+  propertyTitle: text("property_title").notNull(),
+  propertyDeskripsi: text("property_deskripsi").notNull(),
+  propertyPrice: integer("property_price").notNull(),
   listingType: text("listing_type", { enum: ["sale", "rent"] }).notNull(),
+  propertyLuasTanah: integer("property_luas_tanah").notNull(),
+  propertyLuasBangunan: integer("property_luas_bangunan").notNull(),
+  propertyKamarMandi: integer("property_kamar_mandi").notNull(),
+  propertyKamarTidur: integer("property_kamar_tidur").notNull(),
+  propertyCarport: integer("property_carport"),
+  propertyTipeSertifikat: text("property_tipe_sertifikat", {
+    enum: ["SHM", "HGB", "SHP", "HGU", "SHMSRS"],
+  }),
+  propertyJumlahLantai: integer("property_jumlah_lantai"),
+  propertyGarasi: integer("property_garasi"),
+  propertyDayaListrik: integer("property_daya_listrik"),
+  propertyTipeIklan: text("property_tipe_iklan", {
+    enum: ["Dijual", "Disewa"],
+  }),
+  propertyPerabotan: text("property_tipe_perabotan", {
+    enum: ["Fully Furnished", "Unfurnished", "Semi-furnished"],
+  }),
 
-  // Core Specs (Common in Indonesia)
-  bedrooms: integer("bedrooms"),
-  bathrooms: integer("bathrooms"),
-  landSize: real("land_size"), // Luas Tanah (m2)
-  buildingSize: real("building_size"), // Luas Bangunan (m2)
-  floors: integer("floors").default(1),
+  // Address
+  propertyAddressProvince: text("property_address_province").notNull(),
+  propertyAddressCity: text("property_address_city").notNull(),
+  propertyAddressLat: real("property_address_lat"),
+  propertyAddressLon: real("property_address_lon"),
 
-  // Location
-  address: text("address").notNull(),
-  province: text("province").notNull(),
-  city: text("city").notNull(),
-  district: text("district").notNull(), // Kecamatan
-  postalCode: text("postal_code"),
-  latitude: real("latitude"),
-  longitude: real("longitude"),
-
-  // Legal & Utilities
-  certificate: text("certificate", { enum: ["SHM", "HGB", "Lainnya"] }), // Vital for Indo market
-  electricity: integer("electricity"), // Daya Listrik (e.g., 2200)
-  waterSource: text("water_source"), // PDAM / Sumur
-
-  // Metadata
-  ownerId: text("owner_id")
+  // Agent
+  propertyAgentId: integer("property_agent_id")
     .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  status: text("status", { enum: ["active", "sold", "hidden"] }).default(
-    "active",
-  ),
+    .references(() => users.id),
+
+  // Timestamps
   createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(
     () => new Date(),
   ),
