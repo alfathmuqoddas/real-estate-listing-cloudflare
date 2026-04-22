@@ -3,9 +3,9 @@ import { propertiesService } from "@/modules/properties/properties.service";
 
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
-    if (!locals.user) {
-      return new Response("Unauthorized", { status: 401 });
-    }
+    // if (!locals.user) {
+    //   return new Response("Unauthorized", { status: 401 });
+    // }
 
     const body = await request.json();
 
@@ -17,11 +17,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
       );
     }
 
-    const now = new Date();
-
     const result = await propertiesService.createProperty({
       ...body,
-      ownerId: locals.user.uid,
+      ownerId: locals?.user?.uid || "",
     });
 
     return new Response(JSON.stringify({ data: result }), {
