@@ -1,27 +1,27 @@
 export type CreatePropertyInput = {
-  title: string;
-  description?: string;
+  propertyTitle: string;
+  propertyDeskripsi: string;
+  propertyPrice: number;
+  propertyListingType: "sale" | "rent";
+  propertyType: "Rumah" | "Apartemen";
+  propertyLuasTanah: number;
+  propertyLuasBangunan: number;
+  propertyKamarMandi: number;
+  propertyKamarTidur: number;
+  propertyCarport?: number;
+  propertyTipeSertifikat: "SHM" | "HGB" | "SHP" | "HGU" | "SHMSRS";
+  propertyJumlahLantai?: number;
+  propertyGarasi?: number;
+  propertyDayaListrik?: 450 | 900 | 1300 | 2200 | 3500 | 5500 | 6600;
+  propertyTipeIklan: "Dijual" | "Disewa";
+  propertyPerabotan?: "Fully Furnished" | "Unfurnished" | "Semi-furnished";
 
-  price: number;
-  listingType: "sale" | "rent";
+  // Address
+  propertyAddressProvince: string;
+  propertyAddressCity: string;
+  propertyAddressLat?: number;
+  propertyAddressLon?: number;
 
-  bedrooms?: number;
-  bathrooms?: number;
-  landSize?: number;
-  buildingSize?: number;
-  floors?: number;
-
-  address: string;
-  province: string;
-  city: string;
-  district: string;
-  postalCode?: string;
-  latitude?: number;
-  longitude?: number;
-
-  certificate?: "SHM" | "HGB" | "Lainnya";
-  electricity?: number;
-  waterSource?: string;
-
-  ownerId: string;
+  // Agent
+  propertyAgentId: string;
 };

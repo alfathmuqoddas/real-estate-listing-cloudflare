@@ -3,11 +3,16 @@ import { propertiesService } from "@/modules/properties/properties.service";
 
 export const GET: APIRoute = async () => {
   try {
-    const results = propertiesService.getAllProperties;
-    return new Response(JSON.stringify({ results }), { status: 201 });
+    const results = await propertiesService.getAllProperties();
+
+    return new Response(JSON.stringify({ data: results }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error) {
-    return new Response(JSON.stringify({ error: "Error getting properties" }), {
+    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
       status: 500,
+      headers: { "Content-Type": "application/json" },
     });
   }
 };
