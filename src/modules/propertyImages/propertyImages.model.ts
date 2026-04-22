@@ -1,12 +1,15 @@
 import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 import { propertiesTable } from "@/modules/properties/properties.model";
 import { usersTable } from "@/modules/users/users.model";
+import { v7 as uuidv7 } from "uuid";
 
 export const users = usersTable;
 export const properties = propertiesTable;
 
 export const propertyImagesTable = sqliteTable("property_images", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => uuidv7()),
   propertyId: integer("property_id")
     .notNull()
     .references(() => properties.id),

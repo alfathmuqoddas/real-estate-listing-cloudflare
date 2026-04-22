@@ -1,10 +1,13 @@
 import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 import { usersTable } from "@/modules/users/users.model";
+import { v7 as uuidv7 } from "uuid";
 
 export const users = usersTable;
 
 export const propertiesTable = sqliteTable("properties", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => uuidv7()),
   propertyType: text("property_type", { enum: ["Rumah", "Apartemen"] }),
   propertyTitle: text("property_title").notNull(),
   propertyDeskripsi: text("property_deskripsi").notNull(),
