@@ -6,42 +6,7 @@ import type { CreatePropertyInput } from "./dto";
 export const propertiesService = {
   createProperty: async (input: CreatePropertyInput) => {
     try {
-      const now = new Date();
-
-      const result = await db
-        .insert(propertiesTable)
-        .values({
-          title: input.title,
-          description: input.description ?? null,
-
-          price: input.price,
-          listingType: input.listingType,
-
-          bedrooms: input.bedrooms ?? null,
-          bathrooms: input.bathrooms ?? null,
-          landSize: input.landSize ?? null,
-          buildingSize: input.buildingSize ?? null,
-          floors: input.floors ?? 1,
-
-          address: input.address,
-          province: input.province,
-          city: input.city,
-          district: input.district,
-          postalCode: input.postalCode ?? null,
-          latitude: input.latitude ?? null,
-          longitude: input.longitude ?? null,
-
-          certificate: input.certificate ?? null,
-          electricity: input.electricity ?? null,
-          waterSource: input.waterSource ?? null,
-
-          ownerId: input.ownerId,
-
-          status: "active",
-          createdAt: now,
-          updatedAt: now,
-        })
-        .returning();
+      const result = await db.insert(propertiesTable).values(input).returning();
 
       return result[0];
     } catch (error) {
@@ -66,51 +31,27 @@ export const propertiesService = {
       const result = await db
         .select()
         .from(propertiesTable)
-        .where(eq(propertiesTable.id, parseInt(id)));
+        .where(eq(propertiesTable.id, id));
       return result[0];
     } catch (error) {
       console.error("GET PROPERTY BY ID SERVICE ERROR:", error);
       throw new Error("Failed to get property by id");
     }
   },
-  updateProperty: async (id: string, input: CreatePropertyInput) => {
+  updateProperty: async (id: string, input: Partial<CreatePropertyInput>) => {
     if (!id) {
       throw new Error("Property id is required");
+    }
+    if (Object.keys(input).length === 0) {
+      throw new Error("No fields to update");
     }
     try {
       const result = await db
         .update(propertiesTable)
-        .set({
-          title: input.title,
-          description: input.description ?? null,
-
-          price: input.price,
-          listingType: input.listingType,
-
-          bedrooms: input.bedrooms ?? null,
-          bathrooms: input.bathrooms ?? null,
-          landSize: input.landSize ?? null,
-          buildingSize: input.buildingSize ?? null,
-          floors: input.floors ?? 1,
-
-          address: input.address,
-          province: input.province,
-          city: input.city,
-          district: input.district,
-          postalCode: input.postalCode ?? null,
-          latitude: input.latitude ?? null,
-          longitude: input.longitude ?? null,
-
-          certificate: input.certificate ?? null,
-          electricity: input.electricity ?? null,
-          waterSource: input.waterSource ?? null,
-
-          status: "active",
-          updatedAt: new Date(),
-        })
-        .where(eq(propertiesTable.id, parseInt(id)));
-
-      return result;
+        .set({ ...input, updatedAt: new Date() })
+        .where(eq(propertiesTable.id, id))
+        .returning();
+      return result[0] ?? null;
     } catch (error) {
       console.error("UPDATE PROPERTY SERVICE ERROR:", error);
       throw new Error("Failed to update property");
@@ -123,8 +64,10 @@ export const propertiesService = {
     try {
       const result = await db
         .delete(propertiesTable)
-        .where(eq(propertiesTable.id, parseInt(id)));
-      return result;
+        .where(eq(propertiesTable.id, id))
+        .returning();
+
+      return result[0] ?? null;
     } catch (error) {
       console.error("DELETE PROPERTY SERVICE ERROR:", error);
       throw new Error("Failed to delete property");
