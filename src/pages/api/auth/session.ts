@@ -1,6 +1,5 @@
 import { verifyToken } from "@/lib/verifyToken";
 import type { APIRoute } from "astro";
-import { usersService } from "@/modules/users/users.service";
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {
@@ -13,8 +12,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const decodedUser = await verifyToken(token);
 
     if (!decodedUser) return new Response("Invalid token", { status: 401 });
-
-    await usersService.syncUserData(decodedUser);
 
     cookies.set("session", token, {
       path: "/",
