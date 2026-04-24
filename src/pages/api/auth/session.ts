@@ -21,6 +21,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       maxAge: 60 * 60 * 24 * 5,
     });
 
+    await fetch("http://localhost:8787/users/sync", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return new Response(JSON.stringify({ success: true }), { status: 200 });
   } catch (error: any) {
     console.error("🔥 API ROUTE CRASHED:", error);

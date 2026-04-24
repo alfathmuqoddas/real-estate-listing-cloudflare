@@ -1,11 +1,11 @@
 ---
+import AppLayout from "@/layout/AppLayout.astro";
 import MainLayout from "@/layout/MainLayout.astro";
-import PageLayout from "@/layout/PageLayout.astro";
 
 export const prerender = true
 ---
+<AppLayout>
 <MainLayout>
-    <PageLayout>
     <h1>Contact</h1>
     <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.
@@ -19,5 +19,5 @@ export const prerender = true
         tortor. Phasellus cursus. Nam nulla. Integer pede justo, lacinia eget,
         tincidunt eget, tempus vel, pede.
         </p>
-        </PageLayout>
 </MainLayout>
+</AppLayout>

@@ -25,7 +25,6 @@ export const useAuth = () => {
 
       window.location.replace("/");
     } catch {
-      // console.error("Login failed: ", error);
       alert("Login failed, please try again.");
     }
   };

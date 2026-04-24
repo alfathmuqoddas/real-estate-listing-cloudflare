@@ -1,13 +1,11 @@
-// src/middleware.ts
 import { defineMiddleware } from "astro:middleware";
-import { verifyToken } from "./lib/verifyToken";
 
 const protectedRoutes = ["/listings/create", "/listings/edit"];
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  const { cookies, locals, url } = context;
+  const { cookies, locals, url, redirect } = context;
   const { pathname } = url;
-  // --- 1. Extract Token ---
+
   const token = cookies.get("session")?.value;
 
   const isProtected = protectedRoutes.some((route) =>
@@ -18,22 +16,24 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return context.redirect("/auth/login?reason=unauthorized");
   }
 
-  // --- 2. Verify JWT (General Auth) ---
   if (token) {
     try {
-      const decodedUser = await verifyToken(token);
+      const payload = JSON.parse(atob(token.split(".")[1]));
 
-      if (decodedUser) {
-        locals.user = decodedUser;
-      } else {
-        cookies.delete("session", { path: "/" });
-      }
+      locals.user = {
+        uid: payload.sub,
+        email: payload.email,
+        name: payload.name,
+        photoUrl: payload.picture,
+      };
     } catch (error) {
       console.error("JWT Verification failed:", error);
-      context.cookies.delete("session", { path: "/" });
+      cookies.delete("session", { path: "/" });
+
+      if (isProtected) {
+        return redirect("/auth/login?reason=invalid-token");
+      }
     }
-  } else {
-    console.error("No session token found");
   }
 
   return next();
