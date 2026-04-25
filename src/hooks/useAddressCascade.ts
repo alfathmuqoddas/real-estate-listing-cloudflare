@@ -1,8 +1,10 @@
-import { useState, useMemo } from "preact/hooks";
+import { useState, useMemo } from "react";
 import { addressOptions } from "@/lib/addressOptions";
 
 export const useAddressCascade = () => {
-  const [selectedProvince, setSelectedProvince] = useState<string | null>("");
+  const [selectedProvince, setSelectedProvince] = useState<
+    string | null | undefined
+  >("");
   const [selectedCity, setSelectedCity] = useState<string | null>("");
 
   // Get unique list of provinces
@@ -20,7 +22,7 @@ export const useAddressCascade = () => {
   }, [selectedProvince]);
 
   // Handle province change: reset city selection
-  const handleProvinceChange = (province: string | null) => {
+  const handleProvinceChange = (province: string | null | undefined) => {
     setSelectedProvince(province);
     setSelectedCity(""); // Reset city when province changes
   };

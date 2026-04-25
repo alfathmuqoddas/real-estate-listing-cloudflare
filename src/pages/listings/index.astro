@@ -1,23 +1,89 @@
 ---
 import AppLayout from "@/layout/AppLayout.astro";
 import MainLayout from "@/layout/MainLayout.astro";
+import {propertyQuerySchema} from "@/schemas/property";
+import {API_URL} from "@/constant";
+import type {Property, User, Images, TPagination} from "@/types";
+import CardCarousel from "@/components/EmblaCardCarousel";
+import {ListingSidebar} from "@/components/listingSidebar";
+import { Bed, Bath, RulerDimensionLine, Grid2x2 } from "lucide-react";
+import Pagination from "@/components/pagination"
 
 export const prerender = false;
 //extract astro search params
+const url = new URL(Astro.request.url);
+const rawQuery = Object.fromEntries(url.searchParams);
+const query = propertyQuerySchema.parse(rawQuery);
+
+const result = await fetch(`${API_URL}/listings?${url.searchParams}`);
+if (!result.ok) throw new Error("Failed to fetch listings");
+
+const listings = await result.json() as {data: Array<Partial<Property> & {owner: Partial<User>} & {images: Array<Partial<Images>>}>, pagination: TPagination}
+
+const data = listings.data
+
+const isApartemen = query.type === "apartemen"
+const isRent = query.listingType === "rent"
 ---
 <AppLayout>
+    <title slot="head">{`${listings.pagination.total} ${isApartemen ? "Apartemen" : "Rumah"} ${isRent ? "Disewa" : "Dijual"} ${query.province ? `di ${query.province}` : ""}${query.city ? `, ${query.city}` : ""} | RealEstate by Alfath Muqoddas`}</title>
+    <meta slot="head" name="og:title" content={`${listings.pagination.total} ${isApartemen ? "Apartemen" : "Rumah"} ${isRent ? "Disewa" : "Dijual"} ${query.province ? `di ${query.province}` : ""}${query.city ? `, ${query.city}` : ""} | RealEstate by Alfath Muqoddas`} />
+    <meta slot="head" name="description" content={`${listings.pagination.total} ${isApartemen ? "Apartemen" : "Rumah"} ${isRent ? "Disewa" : "Dijual"} ${query.province ? `di ${query.province}` : ""}${query.city ? `, ${query.city}` : ""} | RealEstate by Alfath Muqoddas`} />
+    <!-- opengraph meta -->
+     <meta slot="head" property="og:type" content="website" />
+    <meta slot="head" property="og:url" content={Astro.url} />
+    <meta slot="head" property="og:title" content={`${listings.pagination.total} ${isApartemen ? "Apartemen" : "Rumah"} ${isRent ? "Disewa" : "Dijual"} ${query.province ? `di ${query.province}` : ""}${query.city ? `, ${query.city}` : ""} | RealEstate by Alfath Muqoddas`} />
+    <meta slot="head" property="og:description" content={`${listings.pagination.total} ${isApartemen ? "Apartemen" : "Rumah"} ${isRent ? "Disewa" : "Dijual"} ${query.province ? `di ${query.province}` : ""}${query.city ? `, ${query.city}` : ""} | RealEstate by Alfath Muqoddas`} />
+
+    <!-- twitter meta -->
+    <meta slot="head" property="twitter:card" content="summary_large_image" />
+    <meta slot="head" property="twitter:url" content={Astro.url} />
+    <meta slot="head" property="twitter:title" content={`${listings.pagination.total} ${isApartemen ? "Apartemen" : "Rumah"} ${isRent ? "Disewa" : "Dijual"} ${query.province ? `di ${query.province}` : ""}${query.city ? `, ${query.city}` : ""} | RealEstate by Alfath Muqoddas`} />
+    <meta slot="head" property="twitter:description" content={`${listings.pagination.total} ${isApartemen ? "Apartemen" : "Rumah"} ${isRent ? "Disewa" : "Dijual"} ${query.province ? `di ${query.province}` : ""}${query.city ? `, ${query.city}` : ""} | RealEstate by Alfath Muqoddas`} />
 <MainLayout>
-    <h1>Listings</h1>
-    <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.
-        Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies
-        sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius
-        a, semper congue, euismod non, mi. Proin porttitor, orci nec nonummy
-        molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat.
-        Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium
-        at, ligula. Suspendisse hendrerit dolor vel lectus. Donec pellentesque
-        dignissim enim. Aliquam cursus orci eu nulla. Integer viverra quam a
-        tortor. Phasellus cursus. Nam nulla. Integer pede justo, lacinia eget,
-    </p>
+    <div class="flex gap-6">
+        <div class="hidden md:block basis-1/5 grow-0 shrink-0 min-w-0">
+            <ListingSidebar client:load initialQuery={query} />
+        </div>
+    
+        <div class="md:basis-4/5 grow-0 min-w-0">
+            <h1 class="text-2xl font-bold">{listings.pagination.total} {isApartemen ? "Apartemen" : "Rumah"} {isRent ? "Disewa" : "Dijual"} {query.province ? `di ${query.province}` : ""}{query.city ? `, ${query.city}` : ""}</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                {
+                    data.map((item) => (
+                        <div class="bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden">
+                            <figure>
+                                <CardCarousel client:load images={item.images} />
+                            </figure>
+                            <div class="flex flex-col p-4 ">
+                                <p class="text-lg font-bold">Rp {item.propertyPrice?.toLocaleString("id-ID")}</p>
+                                <p class="text-sm text-muted-foreground border-b border-gray-200 pb-4">{item.propertyAddressProvince}, {item.propertyAddressCity}</p>
+                            
+                                <div class="flex pt-4 gap-4 font-heading text-sm">
+                                    <div class="flex gap-1 items-center">
+                                        <Bed className="w-4 h-4" />
+                                        <span>{item.propertyKamarTidur}</span>
+                                    </div>
+                                    <div class="flex gap-1 items-center">
+                                        <Bath className="w-4 h-4" />
+                                        <span>{item.propertyKamarMandi}</span>
+                                    </div>
+                                    <div class="flex gap-1 items-center">
+                                        <RulerDimensionLine className="w-4 h-4" />
+                                        <span>{item.propertyLuasBangunan} m<sup>2</sup></span>
+                                    </div>
+                                     <div class="flex gap-1 items-center">
+                                        <Grid2x2 className="w-4 h-4" />
+                                        <span>{item.propertyLuasTanah} m<sup>2</sup></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+            <Pagination client:visible currentPage={listings.pagination.page} totalPages={listings.pagination.totalPages} />
+        </div>
+    </div>
 </MainLayout>
 </AppLayout>
