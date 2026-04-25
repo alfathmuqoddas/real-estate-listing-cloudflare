@@ -2,7 +2,7 @@
 import AppLayout from "@/layout/AppLayout.astro";
 import MainLayout from "@/layout/MainLayout.astro";
 import {propertyQuerySchema} from "@/schemas/property";
-import {API_URL} from "@/constant";
+import {getApiUrl} from "@/constant";
 import type {Property, User, Images, TPagination} from "@/types";
 import CardCarousel from "@/components/EmblaCardCarousel";
 import {ListingSidebar} from "@/components/listingSidebar";
@@ -14,6 +14,8 @@ export const prerender = false;
 const url = new URL(Astro.request.url);
 const rawQuery = Object.fromEntries(url.searchParams);
 const query = propertyQuerySchema.parse(rawQuery);
+const runtime = Astro.locals.runtime
+const API_URL = getApiUrl(runtime)
 
 let listings = {} as {data: Array<Partial<Property> & {owner: Partial<User>} & {images: Array<Partial<Images>>}>, pagination: TPagination}
 let error = false
@@ -51,7 +53,7 @@ const isRent = query.listingType === "rent"
             <ListingSidebar client:load initialQuery={query} />
         </div>
     
-        {error ? <>Error</div> : 
+        {error ? <div>Error</div> : 
         <div class="md:basis-4/5 grow-0 min-w-0">
             <h1 class="text-2xl font-bold">{listings.pagination.total} {isApartemen ? "Apartemen" : "Rumah"} {isRent ? "Disewa" : "Dijual"} {query.province ? `di ${query.province}` : ""}{query.city ? `, ${query.city}` : ""}</h1>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">

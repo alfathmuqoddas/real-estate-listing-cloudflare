@@ -10,5 +10,6 @@ interface UserContext {
 declare namespace App {
   interface Locals {
     user: UserContext | null;
+    runtime: any;
   }
 }
