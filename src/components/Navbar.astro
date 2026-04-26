@@ -47,6 +47,6 @@ const navItemsWithLinksState = navItems.map(item => ({
         </div>
 
         <!-- login -->
-         <AuthButton client:only="react" isLoggedIn={isLoggedIn} />
+         <AuthButton client:visible isLoggedIn={isLoggedIn} />
     </div>
 </nav>

@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 import cloudflare from "@astrojs/cloudflare";
 
-import react from "@astrojs/react";
+import preact from "@astrojs/preact";
 
 export default defineConfig({
   env: {
@@ -13,10 +13,12 @@ export default defineConfig({
       PUBLIC_API_URL: envField.string({ context: "client", access: "public" }),
     },
   },
+
   vite: {
     plugins: [tailwindcss()],
   },
+
   output: "server",
   adapter: cloudflare(),
-  integrations: [react()],
+  integrations: [preact({ compat: true })],
 });
