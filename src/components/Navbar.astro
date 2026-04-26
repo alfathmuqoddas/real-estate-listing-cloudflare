@@ -27,9 +27,9 @@ const navItemsWithLinksState = navItems.map(item => ({
 <nav class="max-h-16 py-4 px-6 border-b border-gray-100">
     <div class="flex gap-8 items-center justify-between max-w-7xl mx-auto">
         <!-- title -->
-        <div>
+        <a href="/">
              <h1 class="text-primary font-bold text-2xl">RealEstate</h1>
-        </div>
+        </a>
         
         <!-- menu -->
         <div class="hidden md:flex gap-6 items-center">
@@ -47,6 +47,6 @@ const navItemsWithLinksState = navItems.map(item => ({
         </div>
 
         <!-- login -->
-         <AuthButton client:load isLoggedIn={isLoggedIn} />
+         <AuthButton client:only="react" isLoggedIn={isLoggedIn} />
     </div>
 </nav>

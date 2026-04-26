@@ -1,13 +1,16 @@
 {
-	"compatibility_date": "2026-04-13",
-	"compatibility_flags": ["global_fetch_strictly_public"],
-	"name": "real-estate-listing-cloudflare",
-	"main": "@astrojs/cloudflare/entrypoints/server",
-	"assets": {
-		"directory": "./dist",
-		"binding": "ASSETS"
-	},
-	"observability": {
-		"enabled": true
-	}
+  "compatibility_date": "2026-04-13",
+  "compatibility_flags": ["global_fetch_strictly_public"],
+  "name": "real-estate-listing-cloudflare",
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+  },
+  "observability": {
+    "enabled": true,
+  },
+  "vars": {
+    "PUBLIC_API_URL": "http://real-estate-hono.alfath-muqoddas.workers.dev",
+  },
 }

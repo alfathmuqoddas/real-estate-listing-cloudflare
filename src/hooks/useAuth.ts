@@ -4,6 +4,11 @@ import { signInWithPopup, signOut as firebaseSignOut } from "firebase/auth";
 export const useAuth = () => {
   const handleLogin = async () => {
     try {
+      if (!auth) {
+        console.error("Auth is not initialized");
+        return;
+      }
+
       const result = await signInWithPopup(auth, provider);
 
       const token = await result.user.getIdToken(true);
@@ -31,6 +36,7 @@ export const useAuth = () => {
 
   const handleLogout = async () => {
     try {
+      if (!auth) return;
       await firebaseSignOut(auth);
       const response = await fetch("/api/auth/logout", {
         method: "POST",

@@ -4,20 +4,16 @@ import MainLayout from '@/layout/MainLayout.astro';
 import {AuthCard} from '@/components/AuthCard';
 
 
-export const prerender = false
-
-export function getStaticPaths() {
-  return [
-    { params: { type: "login" } },
-    { params: { type: "register" } },
-  ];
-}
-
 const { type } = Astro.params;
 
-if (!["login", "register"].includes(type)) {
-  throw new Error("Invalid auth type");
+
+if (!type || !["login", "register"].includes(type)) {
+  return new Response(null, {
+    status: 404,
+    statusText: 'Not found'
+  });
 }
+
 ---
 <AppLayout>
     <MainLayout>

@@ -2,62 +2,78 @@
 import AppLayout from "@/layout/AppLayout.astro";
 import MainLayout from "@/layout/MainLayout.astro";
 import {propertyQuerySchema} from "@/schemas/property";
-import {getApiUrl} from "@/constant";
 import type {Property, User, Images, TPagination} from "@/types";
 import CardCarousel from "@/components/EmblaCardCarousel";
 import {ListingSidebar} from "@/components/listingSidebar";
 import { Bed, Bath, RulerDimensionLine, Grid2x2 } from "lucide-react";
 import Pagination from "@/components/pagination"
+import { PUBLIC_API_URL } from "astro:env/client";
 
-export const prerender = false;
-//extract astro search params
+let query;
+try {
+    const url = new URL(Astro.request.url);
+    const rawQuery = Object.fromEntries(url.searchParams);
+    query = propertyQuerySchema.parse(rawQuery);
+} catch (e) {
+    return Astro.redirect("/404");
+}
+
 const url = new URL(Astro.request.url);
-const rawQuery = Object.fromEntries(url.searchParams);
-const query = propertyQuerySchema.parse(rawQuery);
-const runtime = Astro.locals.runtime
-const API_URL = getApiUrl(runtime)
 
 let listings = {} as {data: Array<Partial<Property> & {owner: Partial<User>} & {images: Array<Partial<Images>>}>, pagination: TPagination}
-let error = false
+let fetchError = false;
 
 try {
-const result = await fetch(`${API_URL}/listings?${url.searchParams}`);
-listings = await result.json() 
-} catch (error) {
-    console.error(error)
-    error = true
+    const result = await fetch(`${PUBLIC_API_URL}/listings?${url.searchParams}`);
+    if (!result.ok) throw new Error("Failed to fetch listings");
+    listings = await result.json();
+} catch (e) {
+    console.error("Fetch failed:", e);
+    fetchError = true;
 }
 
 const isApartemen = query.type === "apartemen"
 const isRent = query.listingType === "rent"
 
+const pageTitle = fetchError 
+    ? "Error Loading Listings" 
+    : `${listings.pagination.total} ${isApartemen ? "Apartemen" : "Rumah"} ${isRent ? "Disewa" : "Dijual"} ${query.province ? `di ${query.province}` : ""}${query.city ? `, ${query.city}` : ""} | RealEstate by Alfath Muqoddas`;
+
 ---
 <AppLayout>
-    <title slot="head">{`${listings.pagination.total} ${isApartemen ? "Apartemen" : "Rumah"} ${isRent ? "Disewa" : "Dijual"} ${query.province ? `di ${query.province}` : ""}${query.city ? `, ${query.city}` : ""} | RealEstate by Alfath Muqoddas`}</title>
-    <meta slot="head" name="og:title" content={`${listings.pagination.total} ${isApartemen ? "Apartemen" : "Rumah"} ${isRent ? "Disewa" : "Dijual"} ${query.province ? `di ${query.province}` : ""}${query.city ? `, ${query.city}` : ""} | RealEstate by Alfath Muqoddas`} />
-    <meta slot="head" name="description" content={`${listings.pagination.total} ${isApartemen ? "Apartemen" : "Rumah"} ${isRent ? "Disewa" : "Dijual"} ${query.province ? `di ${query.province}` : ""}${query.city ? `, ${query.city}` : ""} | RealEstate by Alfath Muqoddas`} />
+    <title slot="head">{pageTitle}</title>
+    <meta slot="head" name="og:title" content={pageTitle} />
+    <meta slot="head" name="description" content={pageTitle} />
     <!-- opengraph meta -->
      <meta slot="head" property="og:type" content="website" />
     <meta slot="head" property="og:url" content={Astro.url} />
-    <meta slot="head" property="og:title" content={`${listings.pagination.total} ${isApartemen ? "Apartemen" : "Rumah"} ${isRent ? "Disewa" : "Dijual"} ${query.province ? `di ${query.province}` : ""}${query.city ? `, ${query.city}` : ""} | RealEstate by Alfath Muqoddas`} />
-    <meta slot="head" property="og:description" content={`${listings.pagination.total} ${isApartemen ? "Apartemen" : "Rumah"} ${isRent ? "Disewa" : "Dijual"} ${query.province ? `di ${query.province}` : ""}${query.city ? `, ${query.city}` : ""} | RealEstate by Alfath Muqoddas`} />
+    <meta slot="head" property="og:title" content={pageTitle} />
+    <meta slot="head" property="og:description" content={pageTitle} />
 
     <!-- twitter meta -->
     <meta slot="head" property="twitter:card" content="summary_large_image" />
     <meta slot="head" property="twitter:url" content={Astro.url} />
-    <meta slot="head" property="twitter:title" content={`${listings.pagination.total} ${isApartemen ? "Apartemen" : "Rumah"} ${isRent ? "Disewa" : "Dijual"} ${query.province ? `di ${query.province}` : ""}${query.city ? `, ${query.city}` : ""} | RealEstate by Alfath Muqoddas`} />
-    <meta slot="head" property="twitter:description" content={`${listings.pagination.total} ${isApartemen ? "Apartemen" : "Rumah"} ${isRent ? "Disewa" : "Dijual"} ${query.province ? `di ${query.province}` : ""}${query.city ? `, ${query.city}` : ""} | RealEstate by Alfath Muqoddas`} />
-<MainLayout>
+    <meta slot="head" property="twitter:title" content={pageTitle} />
+    <meta slot="head" property="twitter:description" content={pageTitle} />
+
+    <MainLayout>
     <div class="flex gap-6">
         <div class="hidden md:block basis-1/5 grow-0 shrink-0 min-w-0">
             <ListingSidebar client:load initialQuery={query} />
         </div>
     
-        {error ? <div>Error</div> : 
+        {fetchError ? 
+        <div class="flex-1 flex flex-col items-center justify-center p-10 bg-gray-50 rounded-2xl">
+                <p class="text-red-500 font-bold">Oops! We couldn't load the properties. {PUBLIC_API_URL} is down or your internet connection is slow.</p>
+                <button onclick="window.location.reload()" class="mt-4 text-blue-500 underline">Try again</button>
+        </div>
+         : 
         <div class="md:basis-4/5 grow-0 min-w-0">
             <h1 class="text-2xl font-bold">{listings.pagination.total} {isApartemen ? "Apartemen" : "Rumah"} {isRent ? "Disewa" : "Dijual"} {query.province ? `di ${query.province}` : ""}{query.city ? `, ${query.city}` : ""}</h1>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                {listings.data.map((item) => (
+                {listings.data.length === 0 ? (<div class="mt-10 text-center">No properties found matching your criteria.</div>
+                ) : (
+                listings.data.map((item) => (
                         <div class="bg-white rounded-2xl shadow-lg flex flex-col overflow-hidden">
                             <figure>
                                 <CardCarousel client:load images={item.images} />
@@ -87,7 +103,7 @@ const isRent = query.listingType === "rent"
                             </div>
                         </div>
                     ))
-                }
+                )}
             </div>
             <Pagination client:visible currentPage={listings.pagination.page} totalPages={listings.pagination.totalPages} />
         </div>}
