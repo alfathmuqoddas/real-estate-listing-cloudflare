@@ -4,33 +4,30 @@ import { signInWithPopup, signOut as firebaseSignOut } from "firebase/auth";
 export const useAuth = () => {
   const handleLogin = async () => {
     try {
-      if (!auth) {
-        console.error("Auth is not initialized");
-        return;
-      }
+      if (!auth) throw new Error("Firebase Auth not initialized");
 
+      // PHASE 1: FIREBASE
       const result = await signInWithPopup(auth, provider);
-
       const token = await result.user.getIdToken(true);
 
+      console.log("Firebase success, syncing session...");
+
+      // PHASE 2: YOUR API
       const response = await fetch("/api/auth/session", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Something went wrong during sync");
+        throw new Error(`API Error: ${errorData.error}`);
       }
 
       window.location.replace("/");
-    } catch {
-      alert("Login failed, please try again.");
+    } catch (error: any) {
+      console.error("Login Step Failed:", error);
+      alert(error?.message);
     }
   };
 
