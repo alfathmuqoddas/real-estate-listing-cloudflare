@@ -14,7 +14,7 @@ async function getJWKS() {
 }
 
 export async function verifyToken(token: string) {
-  const projectId = import.meta.env.FIREBASE_PROJECT_ID;
+  const projectId = "fir-project-66397";
 
   if (!projectId) {
     console.error("❌ Auth Error: FIREBASE_PROJECT_ID is not defined.");

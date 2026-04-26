@@ -14,8 +14,14 @@ if (!type || !["login", "register"].includes(type)) {
   });
 }
 
+const capitalisedType = type.charAt(0).toUpperCase() + type.slice(1);
+const pageTitle = `${capitalisedType} | RealEstate by Alfath Muqoddas`;
+
 ---
 <AppLayout>
+    <title slot="head">{pageTitle}</title>
+    <meta slot="head" name="og:title" content={pageTitle} />
+    <meta slot="head" name="description" content={pageTitle} />
     <MainLayout>
     <section class="flex items-center justify-center min-h-[calc(100vh-12rem)]">
         <div class="w-full max-w-sm">

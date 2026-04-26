@@ -1,17 +1,25 @@
 import { verifyToken } from "@/lib/verifyToken";
 import type { APIRoute } from "astro";
+import { PUBLIC_API_URL } from "astro:env/client";
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {
     const { token } = await request.json();
 
     if (!token) {
-      return new Response("No token provided", { status: 400 });
+      return new Response(JSON.stringify({ error: "No token provided" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     const decodedUser = await verifyToken(token);
 
-    if (!decodedUser) return new Response("Invalid token", { status: 401 });
+    if (!decodedUser)
+      return new Response(JSON.stringify({ error: "Invalid token" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
 
     cookies.set("session", token, {
       path: "/",
@@ -21,7 +29,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       maxAge: 60 * 60 * 24 * 5,
     });
 
-    await fetch("http://localhost:8787/users/sync", {
+    await fetch(`${PUBLIC_API_URL}/users/sync`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
