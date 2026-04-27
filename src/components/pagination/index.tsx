@@ -86,7 +86,7 @@ export default function Pagination({ currentPage, totalPages }: Props) {
       <button
         disabled={currentPage >= totalPages}
         onClick={() => updatePage(currentPage + 1)}
-        className="size-10 bg-background border flex items-center justify-center rounded-full disabled:opacity-50"
+        className="size-10 border bg-background rounded-full flex items-center justify-center disabled:opacity-50 cursor-pointer"
       >
         <ChevronRight className="w-4 h-4 cursor-pointer" />
       </button>
