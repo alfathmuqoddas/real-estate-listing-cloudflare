@@ -5,12 +5,15 @@ import {propertyQuerySchema} from "@/schemas/property";
 import type {Property, User, Images, TPagination} from "@/types";
 import CardCarousel from "@/components/EmblaCardCarousel";
 import {ListingSidebar} from "@/components/listingSidebar";
-import { Bed, Bath, RulerDimensionLine, Grid2x2 } from "lucide-react";
+import { Bed, Bath } from "lucide-react";
 import Pagination from "@/components/pagination"
 import { PUBLIC_API_URL } from "astro:env/client";
 import { FavoritesToggle } from "@/components/FavoritesToggle";
 
+const token = Astro.cookies.get("session")?.value;
+
 let query;
+
 try {
     const url = new URL(Astro.request.url);
     const rawQuery = Object.fromEntries(url.searchParams);
@@ -21,11 +24,16 @@ try {
 
 const url = new URL(Astro.request.url);
 
-let listings = {} as {data: Array<Partial<Property> & {owner: Partial<User>} & {images: Array<Partial<Images>>}>, pagination: TPagination}
+let listings = {} as {data: Array<Partial<Property> & {owner: Partial<User>} & {images: Array<Partial<Images>>} & {favorites: Array<{id: string}>}>, pagination: TPagination}
 let fetchError = false;
 
 try {
-    const result = await fetch(`${PUBLIC_API_URL}/listings?${url.searchParams}`);
+    const result = await fetch(`${PUBLIC_API_URL}/listings?${url.searchParams}`, {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
     if (!result.ok) throw new Error("Failed to fetch listings");
     listings = await result.json();
 } catch (e) {
@@ -42,6 +50,7 @@ const pageTitle = fetchError
 
 const startIndex = ((listings.pagination.page - 1) * listings.pagination.limit) + 1;
 const endIndex = Math.min(listings.pagination.page * listings.pagination.limit, listings.pagination.total);
+
 ---
 <AppLayout>
     <title slot="head">{pageTitle}</title>
@@ -80,7 +89,7 @@ const endIndex = Math.min(listings.pagination.page * listings.pagination.limit, 
                 listings.data.map((item) => (
                         <a href={`/listings/${item.id}`} class="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col overflow-hidden relative">
                              <div class="absolute top-2 right-2 z-10">
-                                <FavoritesToggle client:visible />
+                                    <FavoritesToggle client:visible initialFavorite={!!item.favorites?.length} token={token} propertyId={item.id}/>
                             </div>
                             
                             <CardCarousel client:load images={item.images} />
