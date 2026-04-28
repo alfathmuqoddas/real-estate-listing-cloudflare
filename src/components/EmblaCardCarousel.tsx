@@ -25,7 +25,7 @@ export default function CardCarousel({ images }: { images: Array<any> }) {
     <figure className="relative">
       {/* Carousel */}
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex group">
+        <div className="flex">
           {images.map((img, index) => (
             <div className="min-w-full" key={index}>
               <img

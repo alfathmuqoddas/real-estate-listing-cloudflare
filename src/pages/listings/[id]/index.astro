@@ -1,11 +1,97 @@
 ---
 import AppLayout from "@/layout/AppLayout.astro";
 import MainLayout from "@/layout/MainLayout.astro";
+import CardCarousel from "@/components/EmblaCardCarousel";
+import type { Property, User, Images } from "@/types";
+import { PUBLIC_API_URL } from "astro:env/client";
+import { Camera } from "lucide-react";
+import { CardContent } from "@/components/ui/card";
 
 const { id } = Astro.params;
+
+type TProperty =  Property & {owner: Partial<User>} & {images: Array<Partial<Images>>}
+
+let property = {} as TProperty
+let fetchError = false
+
+try {
+    const result = await fetch(`${PUBLIC_API_URL}/listings/${id}`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    if (!result.ok) throw new Error("Failed to fetch listings");
+    property = await result.json();
+} catch (e) {
+    console.error("Fetch failed:", e);
+    fetchError = true;
+}
+
+const metaTitle = !fetchError ? `Property ${property.propertyTitle} | RealEstate by Alfath Muqoddas` : "Error Loading Property";
+const metaDescription = !fetchError ? `Property ${property.propertyDeskripsi} | RealEstate by Alfath Muqoddas` : "Error Loading Property";
+const metaImage = !fetchError ? property.images[0].imageUrl : "https://picsum.photos/seed/wkejrer/1280/720";
 ---
 <AppLayout>
+    <title slot="head">{metaTitle}</title>
+	<meta slot="head" name="title" content={metaTitle} />
+	<meta slot="head" name="description" content={metaDescription} />
+	<!-- opengraph meta -->
+	 <meta slot="head" property="og:type" content="website" />
+	<meta slot="head" property="og:url" content={Astro.url.href} />
+    <meta slot="head" property="og:image" content={metaImage} />
+	<meta slot="head" property="og:title" content={metaTitle} />
+	<meta slot="head" property="og:description" content={metaDescription} />
+
+	<!-- twitter meta -->
+	<meta slot="head" property="twitter:card" content="summary_large_image" />
+	<meta slot="head" property="twitter:url" content={Astro.url.href} />
+    <meta slot="head" property="twitter:image" content={metaImage} />
+	<meta slot="head" property="twitter:title" content={metaTitle} />
+	<meta slot="head" property="twitter:description" content={metaDescription} />
     <MainLayout>
-        <h1>Listing {id}</h1>
-        </MainLayout>
+        {
+            fetchError ? <article class="mt-10 text-center">Oops! We couldn't load the property. {PUBLIC_API_URL} is down or your internet connection is slow.</article>
+            : 
+                <article>
+                    {/* hero section */}
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-2 rounded-2xl overflow-hidden relative">
+                        {
+                            property.images.slice(0, 3).map((img, index) => {
+                                const isFirst = index === 0;
+
+                                return (
+                                    <figure class={`${isFirst ? "md:col-span-2 md:row-span-2" : ""} col-span-1`}>
+                                        <img src={img.imageUrl} alt={img.id} class="w-full h-full object-cover" width="960" height="540" />
+                                    </figure>
+                                )
+                            })
+                        }
+                        <div class="md:col-span-2 group">
+                            <CardCarousel client:load images={property.images.slice(3)} />
+                        </div>
+                        {/* <span class="absolute rounded-full text-sm bottom-2 right-2 py-1.5 px-4 bg-background z-10 flex items-center justify-center gap-1 shadow hover:underline cursor-pointer"><Camera size={20}/>Show All {property.images.length} Photos</span> */}
+                    </div>
+
+
+                    <section class="flex flex-col md:flex-row gap-6 mt-6">
+
+                    {/* property info section */}
+                    <section class="md:basis-3/4">
+                        
+                        <div class="p-4 bg-white rounded-2xl shadow-lg flex flex-col">
+                            <h1 class="text-2xl font-bold text-primary">Rp. {property.propertyPrice.toLocaleString("id-ID")}</h1>
+                            <p class="font-bold text-muted-foreground border-b border-gray-200 pb-4">{property.propertyAddressProvince}, {property.propertyAddressCity}</p>
+                        </div>
+                    </section>
+
+                    {/* agent section */}
+                    <section class="md:basis-1/4 shrink-0">
+                        <div class="p-4 bg-white rounded-2xl shadow-lg flex flex-col">
+                            <h1>Agent</h1>
+                        </div>
+                    </section>
+                </section>
+            </article>
+        }
+    </MainLayout>
 </AppLayout>

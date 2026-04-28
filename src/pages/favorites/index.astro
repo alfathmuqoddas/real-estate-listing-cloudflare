@@ -57,14 +57,13 @@ const favoritesPagination = favorites.pagination
 	<meta slot="head" property="twitter:title" content="Favorites | RealEstate by Alfath Muqoddas" />
 	<meta slot="head" property="twitter:description" content="Favorites | RealEstate by Alfath Muqoddas" />
 <MainLayout>
-	<h1 class="text-3xl font-bold text-primary">Favorites</h1>
-
     {
-        fetchError ? <div class="mt-10 text-center">Oops! We couldn't load your favorites. {PUBLIC_API_URL} is down or your internet connection is slow.</div>
-        : favoritesData.length === 0 ? <div class="mt-10 text-center">You don't have any favorites yet.</div>
-        : <div>
-            <p>You have {favoritesPagination.total} favorites property</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        fetchError ? <article class="mt-10 text-center">Oops! We couldn't load your favorites. {PUBLIC_API_URL} is down or your internet connection is slow.</article>
+        : favoritesData.length === 0 ? <article class="mt-10 text-center">You don't have any favorites yet.</article>
+        : <article>
+	        <h1 class="text-3xl font-bold text-primary">Favorites</h1>
+            <p class="mt-6">You have {favoritesPagination.total} favorites property</p>
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                 {
                     favoritesData.map((favorites) => {
 
@@ -102,9 +101,9 @@ const favoritesPagination = favorites.pagination
                         </a>
                     )})
                 }
-            </div>
+            </section>
             <Pagination client:visible currentPage={favoritesPagination.page} totalPages={favoritesPagination.totalPages} />
-          </div>
+          </article>
                 
     }
 </MainLayout>
