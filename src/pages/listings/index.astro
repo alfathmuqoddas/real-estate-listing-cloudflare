@@ -89,7 +89,7 @@ const endIndex = Math.min(listings.pagination.page * listings.pagination.limit, 
                 listings.data.map((item) => (
                         <a href={`/listings/${item.id}`} class="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col overflow-hidden relative">
                              <div class="absolute top-2 right-2 z-10">
-                                    <FavoritesToggle client:visible initialFavorite={!!item.favorites?.length} token={token} propertyId={item.id}/>
+                                    <FavoritesToggle client:visible initialFavorite={!!item.favorites?.length} token={token ?? ""} propertyId={item.id ?? ""}/>
                             </div>
                             
                             <CardCarousel client:load images={item.images} />

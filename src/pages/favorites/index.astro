@@ -1,0 +1,111 @@
+---
+import AppLayout from "@/layout/AppLayout.astro";
+import MainLayout from "@/layout/MainLayout.astro";
+import { PUBLIC_API_URL } from "astro:env/client";
+import Pagination from "@/components/pagination";
+import CardCarousel from "@/components/EmblaCardCarousel";
+import { Bed, Bath } from "lucide-react";
+import type { Property, User, Images, TPagination } from "@/types";
+
+const token = Astro.cookies.get("session")?.value;
+
+type TFavorites = {
+    data: {
+        id: string;
+        propertyId: string;
+        createdAt: string;
+        property: Partial<Property> & {owner: Partial<User>} & {images: Array<Partial<Images>>};
+    }[]
+    pagination: TPagination;
+
+}
+
+let favorites = {} as TFavorites
+let fetchError = false
+
+try {
+    const results = await fetch(`${PUBLIC_API_URL}/favorites/my-favorites`, {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    if (!results.ok) throw new Error("Failed to fetch favorites");
+    favorites = await results.json();
+} catch (e) {
+    console.error("Fetch failed:", e);
+    fetchError = true;
+}
+
+const favoritesData = favorites.data
+const favoritesPagination = favorites.pagination
+---
+
+<AppLayout>
+	<title slot="head">Favorites | RealEstate by Alfath Muqoddas</title>
+	<meta slot="head" name="title" content="Favorites | RealEstate by Alfath Muqoddas" />
+	<meta slot="head" name="description" content="Favorites | RealEstate by Alfath Muqoddas" />
+	<!-- opengraph meta -->
+	 <meta slot="head" property="og:type" content="website" />
+	<meta slot="head" property="og:url" content={Astro.url.origin} />
+	<meta slot="head" property="og:title" content="Favorites | RealEstate by Alfath Muqoddas" />
+	<meta slot="head" property="og:description" content="Favorites | RealEstate by Alfath Muqoddas" />
+
+	<!-- twitter meta -->
+	<meta slot="head" property="twitter:card" content="summary_large_image" />
+	<meta slot="head" property="twitter:url" content={Astro.url.origin} />
+	<meta slot="head" property="twitter:title" content="Favorites | RealEstate by Alfath Muqoddas" />
+	<meta slot="head" property="twitter:description" content="Favorites | RealEstate by Alfath Muqoddas" />
+<MainLayout>
+	<h1 class="text-3xl font-bold text-primary">Favorites</h1>
+
+    {
+        fetchError ? <div class="mt-10 text-center">Oops! We couldn't load your favorites. {PUBLIC_API_URL} is down or your internet connection is slow.</div>
+        : favoritesData.length === 0 ? <div class="mt-10 text-center">You don't have any favorites yet.</div>
+        : <div>
+            <p>You have {favoritesPagination.total} favorites property</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                {
+                    favoritesData.map((favorites) => {
+
+                        const item = favorites.property;
+
+                        return (
+                        <a href={`/listings/${item.id}`} class="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col overflow-hidden relative">
+                             
+                            <CardCarousel client:load images={item.images} />
+                            
+                            <div class="flex flex-col p-4 ">
+                                <h1 class="text-xl font-bold text-primary">Rp {item.propertyPrice?.toLocaleString("id-ID")}</h1>
+                                <p class="truncate">{item.propertyTitle}</p>
+                                <p class="text-sm text-muted-foreground border-b border-gray-200 pb-4 pt-1">{item.propertyAddressProvince}, {item.propertyAddressCity}</p>
+                            
+                                <div class="flex pt-4 gap-4 font-heading text-sm">
+                                    <div class="flex gap-1 items-center">
+                                        <Bed className="w-4 h-4" />
+                                        <span class="font-bold">{item.propertyKamarTidur}</span>
+                                    </div>
+                                    <div class="flex gap-1 items-center">
+                                        <Bath className="w-4 h-4" />
+                                        <span class="font-bold">{item.propertyKamarMandi}</span>
+                                    </div>
+                                    <div class="flex gap-1 items-center">
+                                        <p>LB</p>
+                                        <span class="font-bold">{item.propertyLuasBangunan} m<sup>2</sup></span>
+                                    </div>
+                                     <div class="flex gap-1 items-center">
+                                        <p>LT</p>
+                                        <span class="font-bold">{item.propertyLuasTanah} m<sup>2</sup></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    )})
+                }
+            </div>
+            <Pagination client:visible currentPage={favoritesPagination.page} totalPages={favoritesPagination.totalPages} />
+          </div>
+                
+    }
+</MainLayout>
+</AppLayout>
