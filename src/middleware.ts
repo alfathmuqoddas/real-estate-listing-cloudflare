@@ -25,6 +25,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
         email: payload.email,
         name: payload.name,
         photoUrl: payload.picture,
+        role: payload.role,
       };
     } catch (error) {
       console.error("JWT Verification failed:", error);

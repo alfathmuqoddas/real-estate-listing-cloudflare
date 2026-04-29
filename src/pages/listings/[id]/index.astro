@@ -4,12 +4,13 @@ import MainLayout from "@/layout/MainLayout.astro";
 import CardCarousel from "@/components/EmblaCardCarousel";
 import type { Property, User, Images } from "@/types";
 import { PUBLIC_API_URL } from "astro:env/client";
-import { Camera } from "lucide-react";
-import { CardContent } from "@/components/ui/card";
+import {  Bath, Bed, Share2 as Share } from "lucide-react";
+import { FavoritesToggle } from "@/components/FavoritesToggle";
 
 const { id } = Astro.params;
+const token = Astro.cookies.get("session")?.value;
 
-type TProperty =  Property & {owner: Partial<User>} & {images: Array<Partial<Images>>}
+type TProperty =  Property & {owner: Partial<User>} & {images: Array<Partial<Images>>}  & {favorites: Array<{id: string}>}
 
 let property = {} as TProperty
 let fetchError = false
@@ -30,6 +31,29 @@ try {
 const metaTitle = !fetchError ? `Property ${property.propertyTitle} | RealEstate by Alfath Muqoddas` : "Error Loading Property";
 const metaDescription = !fetchError ? `Property ${property.propertyDeskripsi} | RealEstate by Alfath Muqoddas` : "Error Loading Property";
 const metaImage = !fetchError ? property.images[0].imageUrl : "https://picsum.photos/seed/wkejrer/1280/720";
+
+const propertyFacts = [
+    {
+        title: "Property Type",
+        value: property.propertyType === "apartemen" ? "Apartemen" : "Rumah",
+    },
+    {
+        title: "Carport",
+        value: property.propertyCarport || "1",
+    },
+    {
+        title: "Ownership Certificate",
+        value: property.propertyTipeSertifikat,
+    },
+    {
+        title: "Power Rating",
+        value: property.propertyDayaListrik,
+    },
+    {
+        title: "Furniture",
+        value: property.propertyPerabotan
+    }
+];
 ---
 <AppLayout>
     <title slot="head">{metaTitle}</title>
@@ -78,9 +102,61 @@ const metaImage = !fetchError ? property.images[0].imageUrl : "https://picsum.ph
                     {/* property info section */}
                     <section class="md:basis-3/4">
                         
-                        <div class="p-4 bg-white rounded-2xl shadow-lg flex flex-col">
-                            <h1 class="text-2xl font-bold text-primary">Rp. {property.propertyPrice.toLocaleString("id-ID")}</h1>
-                            <p class="font-bold text-muted-foreground border-b border-gray-200 pb-4">{property.propertyAddressProvince}, {property.propertyAddressCity}</p>
+                        <div class="p-6 bg-white rounded-2xl shadow-lg flex flex-col gap-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h1 class="text-2xl font-bold text-primary">Rp. {property.propertyPrice.toLocaleString("id-ID")}</h1>
+                                    <p class="font-semibold text-muted-foreground tracking-tight border-gray-200">{property.propertyAddressProvince}, {property.propertyAddressCity}</p>
+                                </div>
+
+                                <div class="flex gap-2">
+                                    {/* sharing button */}
+                                    <div class="flex size-8 items-center justify-center bg-gray-100 rounded-full">
+                                        <Share className="size-4" />
+                                    </div>
+                                    <FavoritesToggle client:visible initialFavorite={!!property.favorites?.length} token={token ?? ""} propertyId={property.id}/>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="flex gap-4 font-heading text-sm">
+                                <div class="flex gap-1 items-center">
+                                    <Bed className="size-4" />
+                                    <span class="font-bold">{property.propertyKamarTidur}</span>
+                                </div>
+                                <div class="flex gap-1 items-center">
+                                    <Bath className="size-4" />
+                                    <span class="font-bold">{property.propertyKamarMandi}</span>
+                                </div>
+                                <div class="flex gap-1 items-center">
+                                    <p>LB</p>
+                                    <span class="font-bold">{property.propertyLuasBangunan} m<sup>2</sup></span>
+                                </div>
+                                    <div class="flex gap-1 items-center">
+                                    <p>LT</p>
+                                    <span class="font-bold">{property.propertyLuasTanah} m<sup>2</sup></span>
+                                </div>
+                            </div>
+                            <hr />
+
+                            <div>
+                                <h1 class="text-xl font-bold tracking-tight">Abut this {property.propertyType}</h1>
+                                <p class="text-sm text-muted-foreground pt-4">{property.propertyDeskripsi}</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-gray-100">
+                                <h1 class="text-lg font-bold tracking-tight">Property Facts</h1>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 mt-4">
+                                    {
+                                        propertyFacts.map((fact) => (
+                                            <div class="flex w-full text-sm py-2 border-b border-gray-100"> 
+                                                <div class="flex flex-1 items-center justify-between gap-4 border-b pb-1">
+                                                    <p class=" text-gray-600">{fact.title}</p>
+                                                    <span class="font-bold text-right">{fact.value ?? "-"}</span>
+                                                </div>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            </div>
                         </div>
                     </section>
 

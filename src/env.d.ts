@@ -5,6 +5,7 @@ interface UserContext {
   email: string;
   name: string;
   photoUrl: string;
+  role: string;
 }
 
 declare namespace App {
