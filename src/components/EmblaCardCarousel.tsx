@@ -85,7 +85,7 @@ export default function CardCarousel({ images }: { images: Array<any> }) {
         ))}
       </div>
       <div
-        class={
+        className={
           "absolute bottom-2 right-2 text-xs gap-1 flex items-center justify-center px-2 py-1 bg-background rounded-full"
         }
       >

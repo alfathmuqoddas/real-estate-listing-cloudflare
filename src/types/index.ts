@@ -57,3 +57,23 @@ export type TPagination = {
   page: number;
   totalPages: number;
 };
+
+export type Agency = {
+  agencyName: string;
+  logoUrl: string;
+  websiteUrl: string;
+  phoneNumber: string;
+  email: string;
+  address: string;
+  city: string;
+  province: string;
+  establishedAt: string;
+};
+
+export type PropertyFeature = {
+  feature: {
+    id: string;
+    featureName: string;
+    featureIcon: string;
+  };
+};
