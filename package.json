@@ -14,12 +14,14 @@
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.1.8",
-    "@astrojs/preact": "^5.1.2",
+    "@astrojs/react": "^5.0.4",
     "@base-ui/react": "^1.4.0",
     "@faker-js/faker": "^10.4.0",
     "@fontsource-variable/manrope": "^5.2.8",
     "@fontsource-variable/space-grotesk": "^5.2.10",
     "@tailwindcss/vite": "^4.2.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "astro": "^6.1.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -27,9 +29,12 @@
     "embla-carousel-react": "^8.6.0",
     "firebase": "^12.12.0",
     "jose": "^6.2.2",
+    "leaflet": "^1.9.4",
     "lucide-react": "^1.8.0",
     "next-themes": "^0.4.6",
-    "preact": "^10.29.1",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "react-leaflet": "^5.0.0",
     "shadcn": "^4.2.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
@@ -42,6 +47,7 @@
     "vite": "^7"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.21",
     "dotenv": "^17.4.2"
   }
 }

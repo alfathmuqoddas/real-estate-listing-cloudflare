@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 import cloudflare from "@astrojs/cloudflare";
 
-import preact from "@astrojs/preact";
+import react from "@astrojs/react";
 
 export default defineConfig({
   env: {
@@ -16,9 +16,15 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: ["leaflet"],
+    },
+    ssr: {
+      noExternal: ["react-leaflet", "leaflet"],
+    },
   },
 
   output: "server",
   adapter: cloudflare(),
-  integrations: [preact({ compat: true })],
+  integrations: [react()],
 });
