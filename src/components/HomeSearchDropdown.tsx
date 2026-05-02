@@ -28,6 +28,10 @@ export function AddressPicker() {
     setSelectedCity,
   } = useAddressCascade();
 
+  const getLabel = (options: any[], value: string | null) => {
+    return options.find((opt) => opt.value === value)?.label;
+  };
+
   const [propertyType, setPropertyType] = useState<string | null>("rumah");
   const [sellOrRent, setSellOrRent] = useState<string | null>("sell");
 
@@ -50,12 +54,12 @@ export function AddressPicker() {
   };
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-5 gap-2 items-center flex-wrap">
+    <div className="bg-background p-4 rounded-xl shadow mt-4 grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
       {/* Province Select */}
-      <div className="flex flex-col gap-2">
-        <Label>Provinsi</Label>
+      <div className="flex flex-col gap-1.5">
+        <Label className="text-xs text-muted-foreground">Provinsi</Label>
         <Select value={selectedProvince} onValueChange={handleProvinceChange}>
-          <SelectTrigger id="province" className="min-w-32">
+          <SelectTrigger id="province" className="w-full">
             <SelectValue placeholder="Pilih Provinsi" />
           </SelectTrigger>
           <SelectContent>
@@ -70,14 +74,14 @@ export function AddressPicker() {
       </div>
 
       {/* City Select */}
-      <div className="flex flex-col gap-2">
-        <Label>Kota</Label>
+      <div className="flex flex-col gap-1.5">
+        <Label className="text-xs text-muted-foreground">Kota</Label>
         <Select
           value={selectedCity}
           onValueChange={setSelectedCity}
           disabled={!selectedProvince}
         >
-          <SelectTrigger id="city" className="min-w-32">
+          <SelectTrigger id="city" className="w-full">
             <SelectValue
               placeholder={
                 selectedProvince ? "Pilih Kota" : "Pilih Provinsi dulu"
@@ -96,18 +100,17 @@ export function AddressPicker() {
       </div>
 
       {/* Property Type Select */}
-      <div className="flex flex-col gap-2">
-        <Label>Tipe Rumah</Label>
-        <Select
-          value={propertyType ?? ""}
-          onValueChange={(value) => setPropertyType(value)}
-        >
-          <SelectTrigger id="propertyType" className={"min-w-32"}>
+      <div className="flex flex-col gap-1.5">
+        <Label className="text-xs text-muted-foreground">Tipe Rumah</Label>
+        <Select value={propertyType ?? ""} onValueChange={setPropertyType}>
+          <SelectTrigger id="propertyType" className={"w-full"}>
             <SelectValue
               placeholder={
                 propertyType ? "Select Property Type" : "Choose a property type"
               }
-            />
+            >
+              {getLabel(propertyTypeOptions, propertyType)}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {propertyTypeOptions.map((type) => (
@@ -120,14 +123,15 @@ export function AddressPicker() {
       </div>
 
       {/* Sell or Rent Select */}
-      <div className="flex flex-col gap-2">
-        <Label>Dijual atau disewa</Label>
-        <Select
-          value={sellOrRent ?? ""}
-          onValueChange={(value) => setSellOrRent(value)}
-        >
-          <SelectTrigger id="sellOrRent" className={"min-w-32"}>
-            <SelectValue placeholder={"Dijual atau disewa"} />
+      <div className="flex flex-col gap-1.5">
+        <Label className="text-xs text-muted-foreground">
+          Dijual atau disewa
+        </Label>
+        <Select value={sellOrRent ?? ""} onValueChange={setSellOrRent}>
+          <SelectTrigger id="sellOrRent" className={"w-full"}>
+            <SelectValue placeholder={"Dijual atau disewa"}>
+              {getLabel(propertyListingTypeOptions, sellOrRent)}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {propertyListingTypeOptions.map((type) => (
