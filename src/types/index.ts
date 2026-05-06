@@ -92,3 +92,11 @@ export type TProperty = Property & {
 } & { images: Array<Partial<Images>> } & {
   favorites: Array<{ id: string }>;
 } & { features: Array<PropertyFeature> };
+
+export interface UserContext {
+  uid: string;
+  email: string;
+  name: string;
+  photoUrl: string;
+  role: "admin" | "user" | "agent";
+}

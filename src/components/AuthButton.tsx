@@ -1,14 +1,18 @@
+import type { UserContext as User } from "@/types";
 import { Button } from "./ui/button";
-import { useAuth } from "@/hooks/useAuth";
+import { UserMenu } from "./UserMenu";
 
-export const AuthButton = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
-  const { handleLogout } = useAuth();
+export const AuthButton = ({
+  isLoggedIn,
+  user,
+}: {
+  isLoggedIn: boolean;
+  user: User | null;
+}) => {
   return (
     <div className={"flex gap-2 items-center"}>
       {isLoggedIn ? (
-        <Button variant="outline" onClick={handleLogout}>
-          Logout
-        </Button>
+        <UserMenu user={user} />
       ) : (
         <>
           <Button
