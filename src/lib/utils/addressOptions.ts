@@ -4,6 +4,7 @@ export type TAddressOption = {
   latRange?: number[];
   lonRange?: number[];
 };
+
 export const addressOptionsWithLatLon: TAddressOption[] = [
   {
     province: "Aceh",

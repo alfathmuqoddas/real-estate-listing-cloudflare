@@ -77,3 +77,18 @@ export type PropertyFeature = {
     featureIcon: string;
   };
 };
+
+export type TListings = {
+  data: Array<
+    Partial<Property> & { owner: Partial<User> } & {
+      images: Array<Partial<Images>>;
+    } & { favorites: Array<{ id: string }> }
+  >;
+  pagination: TPagination;
+};
+
+export type TProperty = Property & {
+  owner: Partial<User & { agency: Partial<Agency> }>;
+} & { images: Array<Partial<Images>> } & {
+  favorites: Array<{ id: string }>;
+} & { features: Array<PropertyFeature> };

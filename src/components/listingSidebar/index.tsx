@@ -47,11 +47,6 @@ export const ListingSidebar = ({ initialQuery }: { initialQuery: any }) => {
     window.location.href = "/listings";
   };
 
-  console.log({
-    current: filters.bedrooms,
-    type: typeof filters.bedrooms,
-  });
-
   return (
     <div className="w-full rounded-xl shadow-lg p-4 min-h-170 flex flex-col gap-4 bg-background">
       <div className="flex justify-between items-center">

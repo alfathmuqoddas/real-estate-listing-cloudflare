@@ -1,55 +1,40 @@
 ---
 import AppLayout from "@/layout/AppLayout.astro";
 import MainLayout from "@/layout/MainLayout.astro";
-import {propertyQuerySchema} from "@/schemas/property";
-import type {Property, User, Images, TPagination} from "@/types";
 import CardCarousel from "@/components/EmblaCardCarousel";
 import {ListingSidebar} from "@/components/listingSidebar";
 import { Bed, Bath } from "lucide-react";
 import Pagination from "@/components/pagination"
 import { PUBLIC_API_URL } from "astro:env/client";
 import { FavoritesToggle } from "@/components/FavoritesToggle";
+import { parsePropertyQuery } from "@/lib/query/listings";
+import { fetchListings } from "@/lib/api/listings";
+import { buildListingMeta } from "@/lib/utils/listingsMeta";
 
 const token = Astro.cookies.get("session")?.value;
 
-let query;
-
-try {
-    const url = new URL(Astro.request.url);
-    const rawQuery = Object.fromEntries(url.searchParams);
-    query = propertyQuerySchema.parse(rawQuery);
-} catch (e) {
-    return Astro.redirect("/404");
-}
-
+const query = parsePropertyQuery(Astro.request);
+if (!query) return Astro.redirect("/404");
 const url = new URL(Astro.request.url);
 
-let listings = {} as {data: Array<Partial<Property> & {owner: Partial<User>} & {images: Array<Partial<Images>>} & {favorites: Array<{id: string}>}>, pagination: TPagination}
-let fetchError = false;
 
-try {
-    const result = await fetch(`${PUBLIC_API_URL}/listings?${url.searchParams}`, {
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        },
-    });
-    if (!result.ok) throw new Error("Failed to fetch listings");
-    listings = await result.json();
-} catch (e) {
-    console.error("Fetch failed:", e);
-    fetchError = true;
-}
+const { data: listings, error: fetchError } = await fetchListings({
+  apiUrl: PUBLIC_API_URL,
+  searchParams: url.searchParams,
+  token,
+});
 
-const isApartemen = query.type === "apartemen"
-const isRent = query.listingType === "rent"
-
-const pageTitle = fetchError 
-    ? "Error Loading Listings" 
-    : `${listings.pagination.total} ${isApartemen ? "Apartemen" : "Rumah"} ${isRent ? "Disewa" : "Dijual"} ${query.province ? `di ${query.province}` : ""}${query.city ? `, ${query.city}` : ""} | RealEstate by Alfath Muqoddas`;
-
-const startIndex = ((listings.pagination.page - 1) * listings.pagination.limit) + 1;
-const endIndex = Math.min(listings.pagination.page * listings.pagination.limit, listings.pagination.total);
+const {
+  isApartemen,
+  isRent,
+  pageTitle,
+  startIndex,
+  endIndex,
+} = buildListingMeta({
+  listings,
+  query,
+  fetchError,
+});
 
 ---
 <AppLayout>
@@ -74,7 +59,7 @@ const endIndex = Math.min(listings.pagination.page * listings.pagination.limit, 
             <ListingSidebar client:load initialQuery={query} />
         </div>
     
-        {fetchError ? 
+        {fetchError || !listings ? 
         <div class="flex-1 flex flex-col items-center justify-center p-10 bg-gray-50 rounded-2xl">
                 <p class="text-red-500 font-bold">Oops! We couldn't load the properties. {PUBLIC_API_URL} is down or your internet connection is slow.</p>
                 <button onclick="window.location.reload()" class="mt-4 text-blue-500 underline">Try again</button>

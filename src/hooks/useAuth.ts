@@ -1,4 +1,4 @@
-import { auth, provider } from "@/lib/firebase-client";
+import { auth, provider } from "@/lib/utils";
 import { signInWithPopup, signOut as firebaseSignOut } from "firebase/auth";
 
 export const useAuth = () => {

@@ -1,4 +1,4 @@
-import { verifyToken } from "@/lib/verifyToken";
+import { verifyToken } from "@/lib/utils";
 import type { APIRoute } from "astro";
 import { PUBLIC_API_URL } from "astro:env/client";
 

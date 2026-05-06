@@ -40,7 +40,6 @@ export default function Pagination({ currentPage, totalPages }: Props) {
   const range = getPaginationRange(currentPage, totalPages);
 
   const updatePage = (page: number | string) => {
-    console.log(page);
     const url = new URL(window.location.href);
 
     if (page === 1) {
