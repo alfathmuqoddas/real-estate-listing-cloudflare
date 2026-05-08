@@ -6,7 +6,7 @@ import { PUBLIC_API_URL } from "astro:env/client";
 import {  Bath, Bed, Share2 as Share } from "lucide-react";
 import { FavoritesToggle } from "@/components/FavoritesToggle";
 import { PropertyLeafletMap } from "@/components/PropertyLeafletMap";
-import { AgentSidebar } from "@/components/AgentSidebar";
+import AgentSidebar  from "@/components/AgentSidebar.astro";
 import { fetchListingById } from "@/lib/api/listings";
 import {listingDetailMeta} from "@/lib/utils/listingsMeta";
 
@@ -77,7 +77,7 @@ const propertyFacts = [
 
                     {/* 🔥 Main carousel (dominant) */}
                     <div class="md:col-span-3 md:row-span-3">
-                        <CardCarousel client:load images={property.images} />
+                        <CardCarousel client:idle images={property.images} />
                     </div>
 
                     {/* 📸 Supporting images */}
@@ -116,7 +116,7 @@ const propertyFacts = [
                                     <div class="flex size-8 items-center justify-center bg-gray-100 rounded-full">
                                         <Share className="size-4" />
                                     </div>
-                                    <FavoritesToggle client:visible initialFavorite={!!property.favorites?.length} token={token ?? ""} propertyId={property.id}/>
+                                    <FavoritesToggle client:load initialFavorite={!!property.favorites?.length} token={token ?? ""} propertyId={property.id}/>
                                 </div>
                             </div>
 
@@ -196,7 +196,7 @@ const propertyFacts = [
                     {/* agent section */}
                     <section class="md:basis-1/3 shrink-0">
                         <div class="p-4 bg-white rounded-2xl shadow-lg flex flex-col">
-                            <AgentSidebar agent={property.owner} agency={property.owner.agency} client:visible/>
+                            <AgentSidebar agent={property.owner} agency={property.owner.agency} />
                         </div>
                     </section>
                 </section>

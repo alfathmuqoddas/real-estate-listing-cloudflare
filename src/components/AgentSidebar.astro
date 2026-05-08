@@ -1,0 +1,61 @@
+---
+import type { User, Agency } from "@/types";
+import { Button } from "./ui/button";
+
+
+const { agent, agency } = Astro.props;
+
+const { name, photoUrl } = agent;
+
+const { agencyName, logoUrl, establishedAt } = agency ?? {};
+
+---
+
+      <h1 class="mb-4 font-bold">Agent Info</h1>
+      <div class="flex gap-4 items-center pb-4 border-b">
+        {/* photo */}
+        <figure class="size-16 rounded-full overflow-hidden">
+          <img
+            src={photoUrl}
+            alt={`photoUrl ${name}`}
+            class="w-full h-full object-cover"
+            loading="lazy"
+            referrer-policy="no-referrer"
+          />
+        </figure>
+
+        {/* name */}
+        <div class="flex flex-col gap-1">
+          <h1 class="font-bold">{name}</h1>
+          <p class="text-sm text-muted-foreground">Corporate Agent</p>
+        </div>
+      </div>
+
+      {agency && (
+        <div class="flex gap-4 items-center py-4 border-b">
+          {/* photo */}
+          <figure class="size-16 rounded-full overflow-hidden">
+            <img
+              src={logoUrl}
+              alt={`photoUrl ${agencyName}`}
+              class="w-full h-full object-cover"
+              loading="lazy"
+            />
+          </figure>
+          {/* name */}
+          <div class="flex flex-col gap-1">
+            <h1 class="font-bold">{agencyName}</h1>
+            <p class="text-sm text-muted-foreground">
+              Since {establishedAt ?? "-"}
+            </p>
+          </div>
+        </div>
+      )}
+      <div class="flex gap-2 items-center justify-between w-full pt-4">
+        <Button size={"lg"} className={"flex-1"} client:visible>
+          ✉️ Email
+        </Button>
+        <Button variant="outline" size={"lg"} className={"flex-1"} client:visible>
+          📞 Call
+        </Button>
+      </div>
