@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react";
+
 export type Property = {
   id: string;
   propertyType: string;
@@ -100,3 +102,9 @@ export interface UserContext {
   photoUrl: string;
   role: "admin" | "user" | "agent";
 }
+
+export type MenuItem = {
+  name: string;
+  href: string;
+  icon?: LucideIcon;
+};
