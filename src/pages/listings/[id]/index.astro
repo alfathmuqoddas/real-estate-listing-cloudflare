@@ -73,7 +73,7 @@ const propertyFacts = [
             : 
                 <article>
                     {/* hero section */}
-                   <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-3 gap-2 rounded-2xl overflow-hidden">
+                   <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-3 gap-2 rounded-2xl overflow-hidden" transition:name={`property-hero-${property.id}`}>
 
                     {/* 🔥 Main carousel (dominant) */}
                     <div class="md:col-span-3 md:row-span-3">
@@ -107,7 +107,7 @@ const propertyFacts = [
 
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <h1 class="text-2xl font-bold text-primary">Rp. {property.propertyPrice.toLocaleString("id-ID")}</h1>
+                                    <h1 class="text-2xl font-bold text-primary" transition:name={`property-price-${property.id}`}>Rp. {property.propertyPrice.toLocaleString("id-ID")}</h1>
                                     <p class="font-semibold text-muted-foreground tracking-tight border-gray-200">{property.propertyAddressProvince}, {property.propertyAddressCity}</p>
                                 </div>
 

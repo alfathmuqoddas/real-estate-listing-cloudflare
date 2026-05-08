@@ -77,12 +77,12 @@ const {
                                     <FavoritesToggle client:load initialFavorite={!!item.favorites?.length} token={token ?? ""} propertyId={item.id ?? ""}/>
                             </div>
                             
-                            <div>
+                            <div transition:name={`property-hero-${item.id}`}>
                             <CardCarousel client:idle images={item.images} />
                             </div>
 
                             <div class="flex flex-col p-4 ">
-                                <h1 class="text-xl font-bold text-primary">Rp {item.propertyPrice?.toLocaleString("id-ID")}</h1>
+                                <h1 class="text-xl font-bold text-primary" transition:name={`property-price-${item.id}`}>Rp {item.propertyPrice?.toLocaleString("id-ID")}</h1>
                                 <p class="truncate">{item.propertyTitle}</p>
                                 <p class="text-sm text-muted-foreground border-b border-gray-200 pb-4 pt-1">{item.propertyAddressProvince}, {item.propertyAddressCity}</p>
                             
