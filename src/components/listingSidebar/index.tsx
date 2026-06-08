@@ -48,7 +48,7 @@ export const ListingSidebar = ({ initialQuery }: { initialQuery: any }) => {
   };
 
   return (
-    <div className="w-full rounded-xl shadow-lg p-4 min-h-170 flex flex-col gap-4 bg-background">
+    <>
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-bold text-primary">Filter</h1>
         <p
@@ -102,6 +102,6 @@ export const ListingSidebar = ({ initialQuery }: { initialQuery: any }) => {
       />
 
       <Button onClick={() => updateURL(filters)}>Apply Filters</Button>
-    </div>
+    </>
   );
 };
