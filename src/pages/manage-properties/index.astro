@@ -21,6 +21,17 @@ const { data: myListings, error: fetchError } = await fetchMyListings({
     <meta slot="head" name="description" content="Manage Properties | RealEstate by Alfath Muqoddas" />
 <MainLayout>
 <h1 class="font-bold text-xl text-primary">Manage Properties</h1>
-<MyPropertiesTable data={myListings} client:load />
+{
+    fetchError || !myListings ? 
+    <div class="flex-1 flex flex-col items-center justify-center p-10 bg-gray-50 rounded-2xl">
+            <p class="text-red-500 font-bold">Oops! We couldn't load your properties. {PUBLIC_API_URL} is down or your internet connection is slow.</p>
+            <button onclick="window.location.reload()" class="mt-4 text-blue-500 underline">Try again</button>
+    </div>
+     : 
+    <div>
+        <p class="text-sm text-muted-foreground">You have {myListings.length} properties</p>
+        <MyPropertiesTable data={myListings} token={token} apiUrl={PUBLIC_API_URL} client:load />
+    </div>
+}
 </MainLayout>
 </AppLayout>

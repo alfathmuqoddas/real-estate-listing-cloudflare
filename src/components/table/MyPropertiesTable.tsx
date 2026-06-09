@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -6,6 +7,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Trash, Pencil } from "lucide-react";
 
@@ -21,13 +31,72 @@ const formatDate = (isoString: string) => {
   });
 };
 
-export const MyPropertiesTable = ({ data }: { data: any[] }) => {
-  const onEdit = (id: string) => {
-    window.location.href = `/manage-properties/edit/${id}`;
+export const DeleteConfirmationModal = ({
+  apiUrl,
+  propertyId,
+  token,
+}: {
+  apiUrl: string;
+  propertyId: string;
+  token?: string;
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleDeleteProperty = async () => {
+    const res = await fetch(`${apiUrl}/listings/${propertyId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      console.error("Failed to delete property");
+      return;
+    }
+
+    setIsOpen(false);
+
+    window.location.reload();
   };
 
-  const onDelete = (id: string) => {
-    window.location.href = `/manage-properties/delete/${id}`;
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger>
+        <Button variant="outline" size="sm" title="Delete Property">
+          <Trash className="w-4 h-4 text-red-500" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Delete Property</DialogTitle>
+        </DialogHeader>
+        <p className="text-sm text-muted-foreground">
+          Are you sure you want to delete this property?
+        </p>
+        <DialogFooter>
+          <DialogClose render={<Button variant="outline">Cancel</Button>} />
+          <Button onClick={handleDeleteProperty} variant="outline">
+            Delete
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export const MyPropertiesTable = ({
+  data,
+  apiUrl,
+  token,
+}: {
+  data: any[];
+  apiUrl: string;
+  token?: string;
+}) => {
+  const onEdit = (id: string) => {
+    window.location.href = `/manage-properties/edit/${id}`;
   };
 
   return (
@@ -72,14 +141,11 @@ export const MyPropertiesTable = ({ data }: { data: any[] }) => {
               >
                 <Pencil className="w-4 h-4" />
               </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onDelete(item.id)}
-                title="Delete Property"
-              >
-                <Trash className="w-4 h-4 text-red-500" />
-              </Button>
+              <DeleteConfirmationModal
+                propertyId={item.id}
+                token={token}
+                apiUrl={apiUrl}
+              />
             </TableCell>
           </TableRow>
         ))}

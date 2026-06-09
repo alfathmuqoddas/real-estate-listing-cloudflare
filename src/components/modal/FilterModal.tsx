@@ -150,9 +150,7 @@ export const FilterModal = ({ initialQuery }: { initialQuery: any }) => {
         </div>
 
         <DialogFooter>
-          <DialogClose
-            render={() => <Button variant="outline">Cancel</Button>}
-          />
+          <DialogClose render={<Button variant="outline">Cancel</Button>} />
           <Button onClick={handleSubmit}>Apply Filters</Button>
         </DialogFooter>
       </DialogContent>
