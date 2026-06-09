@@ -22,7 +22,7 @@ export default function CardCarousel({ images }: { images: Array<any> }) {
   }, [emblaApi]);
 
   return (
-    <figure className="relative">
+    <figure className="relative group">
       {/* Carousel */}
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
