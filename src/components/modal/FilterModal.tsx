@@ -75,6 +75,30 @@ export const FilterModal = ({ initialQuery }: { initialQuery: any }) => {
           <DialogTitle>Filter</DialogTitle>
         </DialogHeader>
 
+        <FilterGroup
+          label="Property Type"
+          name="type"
+          current={filters.type}
+          values={["rumah", "apartemen"]}
+          handleChange={handleChange}
+        />
+
+        <FilterGroup
+          label="Sell or Rent"
+          name="listingType"
+          current={filters.listingType}
+          values={["sell", "rent"]}
+          handleChange={handleChange}
+        />
+
+        <FilterGroup
+          label="Bedrooms"
+          name="bedrooms"
+          current={filters.bedrooms}
+          values={["any", "1", "2", "3", "+4"]}
+          handleChange={handleChange}
+        />
+
         <RangeFilter
           label="Price"
           minKey="minPrice"
@@ -106,6 +130,7 @@ export const FilterModal = ({ initialQuery }: { initialQuery: any }) => {
           label="Bedrooms"
           name="bedrooms"
           current={filters.bedrooms}
+          values={["any", "1", "2", "3", "+4"]}
           handleChange={handleChange}
         />
 
@@ -114,6 +139,7 @@ export const FilterModal = ({ initialQuery }: { initialQuery: any }) => {
           label="Bathrooms"
           name="bathrooms"
           current={filters.bathrooms}
+          values={["any", "1", "2", "3", "+4"]}
           handleChange={handleChange}
         />
 

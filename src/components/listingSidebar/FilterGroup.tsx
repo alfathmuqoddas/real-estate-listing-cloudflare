@@ -4,15 +4,15 @@ export const FilterGroup = ({
   label,
   name,
   current,
+  values,
   handleChange,
 }: {
   label: string;
   name: string;
   current: string | undefined;
+  values: string[];
   handleChange: (key: string, value: string) => void;
 }) => {
-  const values = ["any", "1", "2", "3", "+4"];
-
   return (
     <div className="flex flex-col gap-2">
       <p className="text-sm font-semibold">{label}</p>
