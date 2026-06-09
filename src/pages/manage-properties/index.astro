@@ -1,12 +1,26 @@
 ---
 import AppLayout from "@/layout/AppLayout.astro";
 import MainLayout from "@/layout/MainLayout.astro";
+import { fetchMyListings } from "@/lib/api/listings";
+import { PUBLIC_API_URL } from "astro:env/client";
+import {MyPropertiesTable} from "@/components/table/MyPropertiesTable";
+
+const token = Astro.cookies.get("session")?.value;
+
+
+const { data: myListings, error: fetchError } = await fetchMyListings({
+  apiUrl: PUBLIC_API_URL,
+  token,
+});
+
+
 ---
 <AppLayout>
     <title slot="head">Manage Properties | RealEstate by Alfath Muqoddas</title>
     <meta slot="head" name="title" content="Manage Properties | RealEstate by Alfath Muqoddas" />
     <meta slot="head" name="description" content="Manage Properties | RealEstate by Alfath Muqoddas" />
 <MainLayout>
-<h1>Manage Properties</h1>
+<h1 class="font-bold text-xl text-primary">Manage Properties</h1>
+<MyPropertiesTable data={myListings} client:load />
 </MainLayout>
 </AppLayout>

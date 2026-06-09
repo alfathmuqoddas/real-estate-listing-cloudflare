@@ -1,0 +1,12 @@
+---
+import AppLayout from "@/layout/AppLayout.astro";
+import MainLayout from "@/layout/MainLayout.astro";
+---
+<AppLayout>
+    <title slot="head">Edit Property | RealEstate by Alfath Muqoddas</title>
+    <meta slot="head" name="title" content="Edit Property | RealEstate by Alfath Muqoddas" />
+    <meta slot="head" name="description" content="Edit Property | RealEstate by Alfath Muqoddas" />
+<MainLayout>
+    <h1>Edit Property {Astro.params.id}</h1>
+</MainLayout>
+</AppLayout>

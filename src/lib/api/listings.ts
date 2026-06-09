@@ -58,3 +58,33 @@ export async function fetchListingById({
     };
   }
 }
+
+export async function fetchMyListings({
+  apiUrl,
+  token,
+}: {
+  apiUrl: string;
+  token?: string;
+}) {
+  try {
+    const res = await fetch(`${apiUrl}/listings/my-properties`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch listings");
+
+    return {
+      data: await res.json(),
+      error: false,
+    };
+  } catch (error) {
+    console.error("Fetch failed:", error);
+    return {
+      data: null,
+      error: true,
+    };
+  }
+}
