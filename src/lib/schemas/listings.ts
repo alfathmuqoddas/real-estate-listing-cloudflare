@@ -49,32 +49,59 @@ export const propertyQuerySchema = z
 export type PropertyQuery = z.infer<typeof propertyQuerySchema>;
 
 export const propertySchema = z.object({
-  id: z.string().optional(),
-  propertyType: z.enum(["rumah", "apartemen"]),
-  propertyTitle: z.string().min(5, "Title is required"),
-  propertyDeskripsi: z.string().min(10, "Description is required"),
-  propertyPrice: z.number().min(0),
-  propertyListingType: z.enum(["sell", "rent"]),
-  propertyLuasTanah: z.number().int().min(0),
-  propertyLuasBangunan: z.number().int().min(0),
-  propertyKamarMandi: z.number().int().min(0),
-  propertyKamarTidur: z.number().int().min(0),
-  propertyCarport: z.number().int().min(0).optional().nullable(),
-  propertyTipeSertifikat: z
-    .enum(["SHM", "HGB", "SHP", "HGU", "SHMSRS"])
+  propertyTitle: z.string().min(1, "Property title is required"),
+  propertyDeskripsi: z.string().min(1, "Property description is required"),
+  propertyPrice: z.coerce.number().min(1, "Property price is required"),
+  propertyListingType: z.enum(["sell", "rent"]).default("sell"),
+  propertyType: z.enum(["rumah", "apartemen"]).default("rumah"),
+
+  // Base numbers
+  propertyLuasTanah: z.coerce
+    .number()
+    .min(1, { message: "Land size is required" }),
+  propertyLuasBangunan: z.coerce.number().min(1, "Floor size is required"),
+  propertyKamarTidur: z.coerce
+    .number()
+    .min(1, { message: "At least 1 bedroom is required" }),
+  propertyKamarMandi: z.coerce
+    .number()
+    .min(1, { message: "At least 1 bathroom is required" }),
+
+  // Missing Optional Fields from your Manual Type
+  propertyCarport: z.coerce.number().optional(),
+  propertyGarasi: z.coerce.number().optional(),
+  propertyJumlahLantai: z.coerce.number().optional(),
+  propertyDayaListrik: z
+    .union([
+      z.literal(450),
+      z.literal(900),
+      z.literal(1300),
+      z.literal(2200),
+      z.literal(3500),
+      z.literal(5500),
+      z.literal(6600),
+    ])
     .optional(),
-  propertyJumlahLantai: z.number().int().min(0).optional().nullable(),
-  propertyGarasi: z.number().int().min(0).optional().nullable(),
-  propertyDayaListrik: z.number().int().min(0).optional().nullable(),
+  propertyTipeSertifikat: z
+    .enum(["SHM", "HGB", "SHP", "HGU", "SHMSRS", "Lainnya"])
+    .optional(),
   propertyPerabotan: z
     .enum(["Fully Furnished", "Unfurnished", "Semi-furnished"])
     .optional(),
+
+  // Address
   propertyAddressProvince: z.string().min(1, "Province is required"),
   propertyAddressCity: z.string().min(1, "City is required"),
-  propertyAddressLat: z.number().optional().nullable(),
-  propertyAddressLon: z.number().optional().nullable(),
-  propertyAgentId: z.string().min(1, "Agent is required"),
-  status: z.enum(["active", "inactive"]).optional(),
+  propertyAddressLat: z.coerce.number().optional(),
+  propertyAddressLon: z.coerce.number().optional(),
+
+  // Relationship field
+  propertyFeatures: z
+    .array(z.string())
+    .optional()
+    .default([])
+    .transform((val) => [...new Set(val)]),
+  status: z.enum(["active", "inactive", "draft"]).default("draft"),
 });
 
-export type PropertyFormValues = z.infer<typeof propertySchema>;
+export type PropertyFormValues = z.input<typeof propertySchema>;
