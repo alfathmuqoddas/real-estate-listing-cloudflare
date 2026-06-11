@@ -9,16 +9,9 @@ import { useAddressCascade } from "@/hooks/useAddressCascade"; // Using the hook
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { Label } from "./ui/label";
+import { propertyTypeOptions, propertyListingTypeOptions } from "@/lib/utils";
 
 export function AddressPicker() {
-  const propertyTypeOptions = [
-    { label: "Rumah", value: "rumah" },
-    { label: "Apartemen", value: "apartemen" },
-  ];
-  const propertyListingTypeOptions = [
-    { label: "Dijual", value: "sell" },
-    { label: "Disewa", value: "rent" },
-  ];
   const {
     provinces,
     cities,
