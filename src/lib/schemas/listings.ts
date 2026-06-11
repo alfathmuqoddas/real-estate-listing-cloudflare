@@ -47,3 +47,34 @@ export const propertyQuerySchema = z
   );
 
 export type PropertyQuery = z.infer<typeof propertyQuerySchema>;
+
+export const propertySchema = z.object({
+  id: z.string().optional(),
+  propertyType: z.enum(["rumah", "apartemen"]),
+  propertyTitle: z.string().min(5, "Title is required"),
+  propertyDeskripsi: z.string().min(10, "Description is required"),
+  propertyPrice: z.number().min(0),
+  propertyListingType: z.enum(["sell", "rent"]),
+  propertyLuasTanah: z.number().int().min(0),
+  propertyLuasBangunan: z.number().int().min(0),
+  propertyKamarMandi: z.number().int().min(0),
+  propertyKamarTidur: z.number().int().min(0),
+  propertyCarport: z.number().int().min(0).optional().nullable(),
+  propertyTipeSertifikat: z
+    .enum(["SHM", "HGB", "SHP", "HGU", "SHMSRS"])
+    .optional(),
+  propertyJumlahLantai: z.number().int().min(0).optional().nullable(),
+  propertyGarasi: z.number().int().min(0).optional().nullable(),
+  propertyDayaListrik: z.number().int().min(0).optional().nullable(),
+  propertyPerabotan: z
+    .enum(["Fully Furnished", "Unfurnished", "Semi-furnished"])
+    .optional(),
+  propertyAddressProvince: z.string().min(1, "Province is required"),
+  propertyAddressCity: z.string().min(1, "City is required"),
+  propertyAddressLat: z.number().optional().nullable(),
+  propertyAddressLon: z.number().optional().nullable(),
+  propertyAgentId: z.string().min(1, "Agent is required"),
+  status: z.enum(["active", "inactive"]).optional(),
+});
+
+export type PropertyFormValues = z.infer<typeof propertySchema>;
