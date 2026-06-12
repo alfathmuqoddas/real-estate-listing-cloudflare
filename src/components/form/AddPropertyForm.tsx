@@ -488,11 +488,11 @@ export const AddPropertyForm: React.FC<Props> = ({
                 </FieldLabel>
                 <Select
                   onValueChange={(val) => {
-                    handleProvinceChange(val || "");
-                    form.setValue("propertyAddressProvince", val || "");
+                    field.onChange(val);
+                    handleProvinceChange(val);
                     form.setValue("propertyAddressCity", "");
                   }}
-                  value={form.getValues("propertyAddressProvince") ?? ""}
+                  value={field.value ?? ""}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select province" />
@@ -519,10 +519,9 @@ export const AddPropertyForm: React.FC<Props> = ({
                 <FieldLabel htmlFor="propertyAddressCity">City</FieldLabel>
                 <Select
                   onValueChange={(val) => {
-                    setSelectedCity(val || "");
-                    form.setValue("propertyAddressCity", val || "");
+                    field.onChange(val);
                   }}
-                  value={form.getValues("propertyAddressCity") ?? ""}
+                  value={field.value ?? ""}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select city" />
