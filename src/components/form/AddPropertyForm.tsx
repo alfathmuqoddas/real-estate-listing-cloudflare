@@ -43,17 +43,15 @@ import {
 type Props = {
   initialData?: Partial<PropertyFormValues>;
   onSubmit: (values: PropertyFormValues) => Promise<void> | void;
-  mode?: "create" | "edit";
-  agentOptions: { id: string; name: string }[];
+  mode: "create" | "edit";
   submitLabel?: string;
 };
 
 export const AddPropertyForm: React.FC<Props> = ({
   initialData,
-  onSubmit,
-  mode = "create",
-  agentOptions,
+  mode,
   submitLabel,
+  onSubmit,
 }) => {
   const form = useForm<PropertyFormValues>({
     resolver: zodResolver(propertySchema),
@@ -107,7 +105,7 @@ export const AddPropertyForm: React.FC<Props> = ({
   };
 
   return (
-    <>
+    <div className="p-4 bg-white rounded-lg shadow">
       <form
         id={"property-add-form"}
         onSubmit={form.handleSubmit(handleFormSubmit)}
@@ -543,8 +541,14 @@ export const AddPropertyForm: React.FC<Props> = ({
               </Field>
             )}
           />
+          <div className="flex justify-end">
+            <Button type="submit">
+              {submitLabel ??
+                (mode === "create" ? "Create Property" : "Save Changes")}
+            </Button>
+          </div>
         </FieldGroup>
       </form>
-    </>
+    </div>
   );
 };
