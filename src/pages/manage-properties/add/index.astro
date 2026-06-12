@@ -1,9 +1,17 @@
 ---
 import AppLayout from "@/layout/AppLayout.astro";
 import MainLayout from "@/layout/MainLayout.astro";
+import {AddPropertyPage} from "@/components/form/AddPropertyPage";
 ---
 <AppLayout>
-<MainLayout>
-<h1>Add Property</h1>
-</MainLayout>
+    <title slot="head">Add New Property | RealEstate by Alfath Muqoddas</title>
+    <meta slot="head" name="title" content="Add New Property| RealEstate by Alfath Muqoddas" />
+    <meta slot="head" name="description" content="Add New Property | RealEstate by Alfath Muqoddas" />
+    <MainLayout>
+        <div class="mb-4">
+            <h1 class="text-2xl font-bold text-primary">Add Property</h1>
+            <p class="text-sm text-muted-foreground">Add a new property to the marketplace</p>
+        </div>
+        <AddPropertyPage client:load />
+    </MainLayout>
 </AppLayout>
