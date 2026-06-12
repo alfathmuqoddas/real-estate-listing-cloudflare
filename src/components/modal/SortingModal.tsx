@@ -42,11 +42,14 @@ const sortOptions = [
 ];
 
 export const SortingDialog = () => {
-  if (typeof window === "undefined") return null;
-  const params = new URLSearchParams(window.location.search);
+  let params;
 
-  const currentSortBy = params.get("sortBy") || "createdAt";
-  const currentOrder = params.get("order") || "desc";
+  if (typeof window !== "undefined") {
+    params = new URLSearchParams(window.location.search);
+  }
+
+  const currentSortBy = params?.get("sortBy") || "createdAt";
+  const currentOrder = params?.get("order") || "desc";
   const currentValue = `${currentSortBy}-${currentOrder}`;
 
   const handleChange = (value: string) => {
@@ -57,16 +60,20 @@ export const SortingDialog = () => {
     newParams.set("order", order);
     newParams.set("page", "1");
 
-    window.location.search = newParams.toString();
+    if (typeof window !== "undefined") {
+      window.location.search = newParams.toString();
+    }
   };
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button variant="outline">
-          <ArrowUpDown />
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger
+        render={
+          <Button variant="outline">
+            <ArrowUpDown />
+          </Button>
+        }
+      ></DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Sort By</DialogTitle>

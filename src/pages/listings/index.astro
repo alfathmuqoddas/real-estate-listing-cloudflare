@@ -70,7 +70,7 @@ const {
                     <p class="text-sm text-muted-foreground">Showing {startIndex} - {endIndex} property</p>
                 </div>
                 <div class="flex gap-2 items-center">
-                    <FilterModal client:load initialQuery={query} />
+                    <FilterModal initialQuery={query} client:visible />
                     <SortingDialog client:load />
                 </div>
             </div>
