@@ -1,7 +1,7 @@
 ---
 import AppLayout from "@/layout/AppLayout.astro";
 import MainLayout from "@/layout/MainLayout.astro";
-import {EditPropertyPage} from "@/components/form/EditPropertyPage";
+import {EditPropertyPage} from "@/pages/manage-properties/edit/EditPropertyPage";
 import { PUBLIC_API_URL } from "astro:env/client";
 
 const token = Astro.cookies.get("session")?.value;
@@ -17,6 +17,6 @@ const {id: propertyId} = Astro.params;
             <h1 class="text-2xl font-bold text-primary">Edit Property</h1>
             <p class="text-sm text-muted-foreground">Edit a property</p>
         </div>
-        <EditPropertyPage client:load propertyId={propertyId} token={token} PUBLIC_API_URL={PUBLIC_API_URL} />
+        <EditPropertyPage client:only="react" propertyId={propertyId} token={token} PUBLIC_API_URL={PUBLIC_API_URL} />
     </MainLayout>
 </AppLayout>

@@ -190,7 +190,7 @@ const propertyFacts = [
                             {/* property location */}
                             <div class="flex flex-col gap-2">
                                 <h1 class="text-xl font-bold tracking-tight">Location</h1>
-                                <PropertyLeafletMap lat={property.propertyAddressLat} lon={property.propertyAddressLon} client:only="react" />
+                                <PropertyLeafletMap type="static" initialCoordinates={{lat: property.propertyAddressLat, lon: property.propertyAddressLon}} client:only="react" />
                             </div>
                         </div>
                     </section>

@@ -39,6 +39,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { PropertyLeafletMap } from "../PropertyLeafletMap";
 
 type Props = {
   initialData?: Partial<PropertyFormValues>;
@@ -53,31 +54,34 @@ export const AddPropertyForm: React.FC<Props> = ({
   submitLabel,
   onSubmit,
 }) => {
+  const defaultValues: PropertyFormValues = {
+    propertyType: "rumah",
+    propertyTitle: "",
+    propertyDeskripsi: "",
+    propertyPrice: 0,
+    propertyListingType: "sell",
+    propertyLuasTanah: 0,
+    propertyLuasBangunan: 0,
+    propertyKamarMandi: 0,
+    propertyKamarTidur: 0,
+    propertyCarport: 0,
+    propertyJumlahLantai: 1,
+    propertyGarasi: 0,
+    propertyDayaListrik: 1300,
+    propertyAddressLat: 0,
+    propertyAddressLon: 0,
+    propertyTipeSertifikat: "SHM",
+    propertyPerabotan: "Unfurnished",
+    status: "active",
+    propertyAddressProvince: "",
+    propertyAddressCity: "",
+    propertyFeatures: [],
+    ...initialData,
+  };
+
   const form = useForm<PropertyFormValues>({
     resolver: zodResolver(propertySchema),
-    defaultValues: initialData || {
-      propertyType: "rumah",
-      propertyTitle: "",
-      propertyDeskripsi: "",
-      propertyPrice: 0,
-      propertyListingType: "sell",
-      propertyLuasTanah: 0,
-      propertyLuasBangunan: 0,
-      propertyKamarMandi: 0,
-      propertyKamarTidur: 0,
-      propertyCarport: 0,
-      propertyJumlahLantai: 1,
-      propertyGarasi: 0,
-      propertyDayaListrik: 1300,
-      propertyAddressLat: 0,
-      propertyAddressLon: 0,
-      propertyTipeSertifikat: "SHM",
-      propertyPerabotan: "Unfurnished",
-      status: "active",
-      propertyAddressProvince: "",
-      propertyAddressCity: "",
-      propertyFeatures: [],
-    },
+    defaultValues,
   });
 
   const {
@@ -540,6 +544,61 @@ export const AddPropertyForm: React.FC<Props> = ({
               </Field>
             )}
           />
+          <div className="grid grid-cols-2 gap-4">
+            <Controller
+              name="propertyAddressLat"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="propertyAddressLat">Latitude</FieldLabel>
+                  <Input
+                    value={field.value?.toString() ?? ""}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    type="number"
+                    id="propertyAddressLat"
+                    readOnly
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="propertyAddressLon"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="propertyAddressLon">
+                    Longitude
+                  </FieldLabel>
+                  <Input
+                    value={field.value?.toString() ?? ""}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    type="number"
+                    id="propertyAddressLon"
+                    readOnly
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          </div>
+          <PropertyLeafletMap
+            type="dragable"
+            zoom={4}
+            initialCoordinates={{
+              lat: -2.5,
+              lon: 118.0,
+            }}
+            onChange={(lat, lon) => {
+              form.setValue("propertyAddressLat", lat);
+              form.setValue("propertyAddressLon", lon);
+            }}
+          />
+
           <div className="flex justify-end">
             <Button type="submit">
               {submitLabel ??

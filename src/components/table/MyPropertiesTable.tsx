@@ -17,6 +17,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Trash, Pencil } from "lucide-react";
 
 // Utility to format ISO date
@@ -108,6 +109,7 @@ export const MyPropertiesTable = ({
           <TableHead>Title</TableHead>
           <TableHead>Type</TableHead>
           <TableHead>Listing Type</TableHead>
+          <TableHead>Status</TableHead>
           <TableHead>Created At</TableHead>
           <TableHead>Updated At</TableHead>
           <TableHead className="text-center">Actions</TableHead>
@@ -130,6 +132,19 @@ export const MyPropertiesTable = ({
             </TableCell>
             <TableCell>{item.propertyType}</TableCell>
             <TableCell>{item.propertyListingType}</TableCell>
+            <TableCell>
+              <Badge
+                variant={
+                  item.status === "active"
+                    ? "default"
+                    : item.status === "inactive"
+                      ? "destructive"
+                      : "secondary"
+                }
+              >
+                {item.status}
+              </Badge>
+            </TableCell>
             <TableCell>{formatDate(item.createdAt)}</TableCell>
             <TableCell>{formatDate(item.updatedAt)}</TableCell>
             <TableCell className="flex gap-2 justify-center">

@@ -41,10 +41,6 @@ export const EditPropertyPage = ({
     console.log(values);
   };
 
-  if (!property) {
-    return <div>You must provide a property ID</div>;
-  }
-
   if (isLoading) {
     return <div>Loading...</div>;
   }

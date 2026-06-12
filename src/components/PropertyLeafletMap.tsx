@@ -1,17 +1,28 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useState } from "react";
+import { type LatLngBoundsExpression } from "leaflet";
 
 export const PropertyLeafletMap = ({
-  lat,
-  lon,
+  type = "static",
+  initialCoordinates,
   zoom = 15,
+  onChange,
 }: {
-  lat: number;
-  lon: number;
+  type: "dragable" | "static";
+  initialCoordinates?: { lat: number; lon: number };
   zoom?: number;
+  onChange?: (lat: number, lon: number) => void;
 }) => {
+  const [position, setPosition] = useState<[number, number]>([
+    initialCoordinates?.lat ?? 0,
+    initialCoordinates?.lon ?? 0,
+  ]);
   const [icon, setIcon] = useState<any>(null);
+  const indonesiaBounds: LatLngBoundsExpression = [
+    [-11.0, 95.0],
+    [6.0, 141.0],
+  ];
 
   useEffect(() => {
     import("leaflet").then((L) => {
@@ -29,15 +40,36 @@ export const PropertyLeafletMap = ({
     return <div style={{ height: "400px" }}>Loading map...</div>;
   }
 
-  const position: [number, number] = [lat, lon];
-
   return (
     <div className="w-full h-100 rounded-xl overflow-hidden ">
-      <MapContainer center={position} zoom={zoom} style={{ height: "100%" }}>
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <Marker position={position} icon={icon}>
+      <MapContainer
+        bounds={indonesiaBounds}
+        maxBounds={indonesiaBounds}
+        maxBoundsViscosity={1}
+        center={position}
+        zoom={zoom}
+        minZoom={4}
+        style={{ height: "100%" }}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <Marker
+          position={position}
+          icon={icon}
+          draggable={type === "dragable"}
+          eventHandlers={{
+            dragend: (e) => {
+              const marker = e.target;
+              const newPosition = marker.getLatLng();
+              setPosition([newPosition.lat, newPosition.lng]);
+              onChange?.(newPosition.lat, newPosition.lng);
+            },
+          }}
+        >
           <Popup>
-            {lat}, {lon}
+            {initialCoordinates?.lat}, {initialCoordinates?.lon}
           </Popup>
         </Marker>
       </MapContainer>
