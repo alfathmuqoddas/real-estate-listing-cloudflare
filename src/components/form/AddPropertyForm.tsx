@@ -4,7 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddressCascade } from "@/hooks/useAddressCascade";
 import {
   propertySchema,
-  type PropertyFormValues,
+  type PropertyFormInput,
+  type PropertyFormOutput,
 } from "@/lib/schemas/listings";
 import {
   propertyTypeOptions,
@@ -14,6 +15,7 @@ import {
   DAYA_LISTRIK_OPTIONS,
   STATUS_TYPES,
 } from "@/lib/utils";
+import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -42,8 +44,8 @@ import {
 import { PropertyLeafletMap } from "../PropertyLeafletMap";
 
 type Props = {
-  initialData?: Partial<PropertyFormValues>;
-  onSubmit: (values: PropertyFormValues) => Promise<void> | void;
+  initialData?: Partial<PropertyFormInput>;
+  onSubmit: (values: PropertyFormOutput) => Promise<void> | void;
   mode: "create" | "edit";
   submitLabel?: string;
 };
@@ -54,7 +56,7 @@ export const AddPropertyForm: React.FC<Props> = ({
   submitLabel,
   onSubmit,
 }) => {
-  const defaultValues: PropertyFormValues = {
+  const defaultValues: PropertyFormInput = {
     propertyType: "rumah",
     propertyTitle: "",
     propertyDeskripsi: "",
@@ -68,8 +70,8 @@ export const AddPropertyForm: React.FC<Props> = ({
     propertyJumlahLantai: 1,
     propertyGarasi: 0,
     propertyDayaListrik: 1300,
-    propertyAddressLat: 0,
-    propertyAddressLon: 0,
+    propertyAddressLat: -2.5,
+    propertyAddressLon: 118.0,
     propertyTipeSertifikat: "SHM",
     propertyPerabotan: "Unfurnished",
     status: "active",
@@ -79,20 +81,13 @@ export const AddPropertyForm: React.FC<Props> = ({
     ...initialData,
   };
 
-  const form = useForm<PropertyFormValues>({
+  const form = useForm<PropertyFormInput, any, PropertyFormOutput>({
     resolver: zodResolver(propertySchema),
     defaultValues,
   });
 
-  const {
-    provinces,
-    cities,
-    selectedProvince,
-    selectedCity,
-    selectedDetails,
-    handleProvinceChange,
-    setSelectedCity,
-  } = useAddressCascade();
+  const { provinces, cities, handleProvinceChange, setSelectedCity } =
+    useAddressCascade();
 
   useEffect(() => {
     if (initialData?.propertyAddressProvince) {
@@ -104,7 +99,7 @@ export const AddPropertyForm: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData]);
 
-  const handleFormSubmit = async (values: PropertyFormValues) => {
+  const handleFormSubmit = async (values: PropertyFormOutput) => {
     await onSubmit(values);
   };
 
@@ -588,10 +583,10 @@ export const AddPropertyForm: React.FC<Props> = ({
           </div>
           <PropertyLeafletMap
             type="dragable"
-            zoom={4}
+            zoom={initialData !== undefined ? 15 : 4}
             initialCoordinates={{
-              lat: -2.5,
-              lon: 118.0,
+              lat: (initialData?.propertyAddressLat as number) ?? -2.5,
+              lon: (initialData?.propertyAddressLon as number) ?? 118.0,
             }}
             onChange={(lat, lon) => {
               form.setValue("propertyAddressLat", lat);

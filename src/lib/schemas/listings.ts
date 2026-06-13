@@ -104,4 +104,5 @@ export const propertySchema = z.object({
   status: z.enum(["active", "inactive", "draft"]).default("draft"),
 });
 
-export type PropertyFormValues = z.input<typeof propertySchema>;
+export type PropertyFormOutput = z.infer<typeof propertySchema>;
+export type PropertyFormInput = z.input<typeof propertySchema>;
