@@ -15,16 +15,18 @@ import {
   DAYA_LISTRIK_OPTIONS,
   STATUS_TYPES,
 } from "@/lib/utils";
-import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Field,
+  FieldLegend,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
+  FieldSet,
+  FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -111,495 +113,551 @@ export const AddPropertyForm: React.FC<Props> = ({
         className=""
       >
         <FieldGroup>
-          <Controller
-            name="propertyType"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="propertyType">Property Type</FieldLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger id="propertyType" className={"w-full"}>
-                    <SelectValue placeholder="Choose a property type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {propertyTypeOptions.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
+          <FieldSet>
+            <FieldLegend>Property Type</FieldLegend>
+            <FieldDescription>
+              {mode === "create" ? "Provide" : "Edit"} the type and the status
+              of your property.
+            </FieldDescription>
+            <FieldGroup>
+              <Controller
+                name="status"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="status">Property Status</FieldLabel>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger id="status" className={"w-full"}>
+                        <SelectValue placeholder="Choose property status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {STATUS_TYPES.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
                 )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="propertyListingType"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="propertyListingType">
-                  Property Listing Type
-                </FieldLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger id="propertyListingType" className={"w-full"}>
-                    <SelectValue placeholder="Choose a property listing type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {propertyListingTypeOptions.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
+              />
+              <Controller
+                name="propertyType"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="propertyType">
+                      Property Type
+                    </FieldLabel>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger id="propertyType" className={"w-full"}>
+                        <SelectValue placeholder="Choose a property type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {propertyTypeOptions.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
                 )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="propertyTitle"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="propertyTitle">Title</FieldLabel>
-                <Input
-                  {...field}
-                  aria-invalid={fieldState.invalid}
-                  placeholder="Enter property title"
-                  autoComplete="off"
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
+              />
+              <Controller
+                name="propertyListingType"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="propertyListingType">
+                      Property Listing Type
+                    </FieldLabel>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger
+                        id="propertyListingType"
+                        className={"w-full"}
+                      >
+                        <SelectValue placeholder="Choose a property listing type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {propertyListingTypeOptions.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
                 )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="propertyDeskripsi"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="propertyDeskripsi">Description</FieldLabel>
-                <Textarea
-                  {...field}
-                  id="propertyDeskripsi"
-                  aria-invalid={fieldState.invalid}
-                  placeholder="Enter property description"
-                  rows={6}
-                  className="min-h-24 resize-none"
-                  autoComplete="off"
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="propertyPrice"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="propertyPrice">Price</FieldLabel>
-                <Input
-                  value={field.value?.toString() ?? ""}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                  type="number"
-                  id="propertyPrice"
-                  placeholder="Enter property price"
-                  autoComplete="off"
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="propertyLuasTanah"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="propertyLuasTanah">Land Area</FieldLabel>
-                <InputGroup>
-                  <InputGroupInput
-                    value={field.value?.toString() ?? ""}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                    type="number"
-                    id="propertyLuasTanah"
-                    placeholder="Enter Land Area"
-                    autoComplete="off"
-                  />
-                  <InputGroupAddon align="inline-end">
-                    m<sup>2</sup>
-                  </InputGroupAddon>
-                </InputGroup>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="propertyLuasBangunan"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="propertyLuasBangunan">
-                  Floor Area
-                </FieldLabel>
-                <InputGroup>
-                  <InputGroupInput
-                    value={field.value?.toString() ?? ""}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                    type="number"
-                    id="propertyLuasBangunan"
-                    placeholder="Enter Floor Area"
-                    autoComplete="off"
-                  />
-                  <InputGroupAddon align="inline-end">
-                    m<sup>2</sup>
-                  </InputGroupAddon>
-                </InputGroup>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="propertyKamarMandi"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="propertyKamarMandi">Bathrooms</FieldLabel>
-                <Input
-                  value={field.value?.toString() ?? ""}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                  type="number"
-                  id="propertyKamarMandi"
-                  placeholder="Enter bathrooms number"
-                  autoComplete="off"
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="propertyKamarTidur"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="propertyKamarTidur">Bedrooms</FieldLabel>
-                <Input
-                  value={field.value?.toString() ?? ""}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                  type="number"
-                  id="propertyKamarTidur"
-                  placeholder="Enter bedrooms number"
-                  autoComplete="off"
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="propertyCarport"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="propertyCarport">Carports</FieldLabel>
-                <Input
-                  value={field.value?.toString() ?? ""}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                  type="number"
-                  id="propertyCarport"
-                  placeholder="Enter carports number"
-                  autoComplete="off"
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="propertyJumlahLantai"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="propertyJumlahLantai">Floors</FieldLabel>
-                <Input
-                  value={field.value?.toString() ?? ""}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                  type="number"
-                  id="propertyJumlahLantai"
-                  placeholder="Enter floors number"
-                  autoComplete="off"
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="propertyGarasi"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="propertyGarasi">Garage</FieldLabel>
-                <Input
-                  value={field.value?.toString() ?? ""}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                  type="number"
-                  id="propertyGarasi"
-                  placeholder="Enter garage capacity"
-                  autoComplete="off"
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="propertyDayaListrik"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="propertyDayaListrik">
-                  Electricity Power
-                </FieldLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger id="propertyDayaListrik" className={"w-full"}>
-                    <SelectValue placeholder="Choose electricity power capacity" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {DAYA_LISTRIK_OPTIONS.map((type) => (
-                      <SelectItem key={type} value={type}>
-                        {type}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="propertyTipeSertifikat"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="propertyTipeSertifikat">
-                  Certificate Type
-                </FieldLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger
-                    id="propertyTipeSertifikat"
-                    className={"w-full"}
-                  >
-                    <SelectValue placeholder="Choose property certificate type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SERTIFIKAT_TYPES.map((type) => (
-                      <SelectItem key={type} value={type}>
-                        {type}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="propertyPerabotan"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="propertyPerabotan">
-                  Furnishing Type
-                </FieldLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger id="propertyPerabotan" className={"w-full"}>
-                    <SelectValue placeholder="Choose property furnishing type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {PERABOTAN_TYPES.map((type) => (
-                      <SelectItem key={type} value={type}>
-                        {type}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="status"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="status">Property Status</FieldLabel>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger id="status" className={"w-full"}>
-                    <SelectValue placeholder="Choose property status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {STATUS_TYPES.map((type) => (
-                      <SelectItem key={type} value={type}>
-                        {type}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="propertyAddressProvince"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="propertyAddressProvince">
-                  Province
-                </FieldLabel>
-                <Select
-                  onValueChange={(val) => {
-                    field.onChange(val);
-                    handleProvinceChange(val);
-                    form.setValue("propertyAddressCity", "");
-                  }}
-                  value={field.value ?? ""}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select province" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {provinces.map((p) => (
-                      <SelectItem key={p} value={p}>
-                        {p}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-          <Controller
-            name="propertyAddressCity"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="propertyAddressCity">City</FieldLabel>
-                <Select
-                  onValueChange={(val) => {
-                    field.onChange(val);
-                  }}
-                  value={field.value ?? ""}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select city" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {cities.map((c) => (
-                      <SelectItem key={c} value={c}>
-                        {c}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-          <div className="grid grid-cols-2 gap-4">
-            <Controller
-              name="propertyAddressLat"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="propertyAddressLat">Latitude</FieldLabel>
-                  <Input
-                    value={field.value?.toString() ?? ""}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                    type="number"
-                    id="propertyAddressLat"
-                    readOnly
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-            <Controller
-              name="propertyAddressLon"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="propertyAddressLon">
-                    Longitude
-                  </FieldLabel>
-                  <Input
-                    value={field.value?.toString() ?? ""}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                    type="number"
-                    id="propertyAddressLon"
-                    readOnly
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </div>
-          <PropertyLeafletMap
-            type="dragable"
-            zoom={initialData !== undefined ? 15 : 4}
-            initialCoordinates={{
-              lat: (initialData?.propertyAddressLat as number) ?? -2.5,
-              lon: (initialData?.propertyAddressLon as number) ?? 118.0,
-            }}
-            onChange={(lat, lon) => {
-              form.setValue("propertyAddressLat", lat);
-              form.setValue("propertyAddressLon", lon);
-            }}
-          />
+              />
+            </FieldGroup>
+          </FieldSet>
 
-          <div className="flex justify-end">
-            <Button type="submit">
-              {submitLabel ??
-                (mode === "create" ? "Create Property" : "Save Changes")}
-            </Button>
-          </div>
+          <FieldSeparator />
+
+          <FieldSet>
+            <FieldLegend>Property Details</FieldLegend>
+            <FieldDescription>
+              {mode === "create" ? "Provide" : "Edit"} the details of your
+              property.
+            </FieldDescription>
+            <FieldGroup>
+              <Controller
+                name="propertyTitle"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="propertyTitle">Title</FieldLabel>
+                    <Input
+                      {...field}
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Enter property title"
+                      autoComplete="off"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="propertyDeskripsi"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="propertyDeskripsi">
+                      Description
+                    </FieldLabel>
+                    <Textarea
+                      {...field}
+                      id="propertyDeskripsi"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Enter property description"
+                      rows={6}
+                      className="min-h-24 resize-none"
+                      autoComplete="off"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="propertyPrice"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="propertyPrice">Price</FieldLabel>
+                    <Input
+                      value={field.value?.toString() ?? ""}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      type="number"
+                      id="propertyPrice"
+                      placeholder="Enter property price"
+                      autoComplete="off"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="propertyLuasTanah"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="propertyLuasTanah">
+                      Land Area
+                    </FieldLabel>
+                    <InputGroup>
+                      <InputGroupInput
+                        value={field.value?.toString() ?? ""}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        type="number"
+                        id="propertyLuasTanah"
+                        placeholder="Enter Land Area"
+                        autoComplete="off"
+                      />
+                      <InputGroupAddon align="inline-end">
+                        m<sup>2</sup>
+                      </InputGroupAddon>
+                    </InputGroup>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="propertyLuasBangunan"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="propertyLuasBangunan">
+                      Floor Area
+                    </FieldLabel>
+                    <InputGroup>
+                      <InputGroupInput
+                        value={field.value?.toString() ?? ""}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        type="number"
+                        id="propertyLuasBangunan"
+                        placeholder="Enter Floor Area"
+                        autoComplete="off"
+                      />
+                      <InputGroupAddon align="inline-end">
+                        m<sup>2</sup>
+                      </InputGroupAddon>
+                    </InputGroup>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="propertyKamarMandi"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="propertyKamarMandi">
+                      Bathrooms
+                    </FieldLabel>
+                    <Input
+                      value={field.value?.toString() ?? ""}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      type="number"
+                      id="propertyKamarMandi"
+                      placeholder="Enter bathrooms number"
+                      autoComplete="off"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="propertyKamarTidur"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="propertyKamarTidur">
+                      Bedrooms
+                    </FieldLabel>
+                    <Input
+                      value={field.value?.toString() ?? ""}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      type="number"
+                      id="propertyKamarTidur"
+                      placeholder="Enter bedrooms number"
+                      autoComplete="off"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="propertyCarport"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="propertyCarport">Carports</FieldLabel>
+                    <Input
+                      value={field.value?.toString() ?? ""}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      type="number"
+                      id="propertyCarport"
+                      placeholder="Enter carports number"
+                      autoComplete="off"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="propertyJumlahLantai"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="propertyJumlahLantai">
+                      Floors
+                    </FieldLabel>
+                    <Input
+                      value={field.value?.toString() ?? ""}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      type="number"
+                      id="propertyJumlahLantai"
+                      placeholder="Enter floors number"
+                      autoComplete="off"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="propertyGarasi"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="propertyGarasi">Garage</FieldLabel>
+                    <Input
+                      value={field.value?.toString() ?? ""}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      type="number"
+                      id="propertyGarasi"
+                      placeholder="Enter garage capacity"
+                      autoComplete="off"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="propertyDayaListrik"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="propertyDayaListrik">
+                      Electricity Power
+                    </FieldLabel>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger
+                        id="propertyDayaListrik"
+                        className={"w-full"}
+                      >
+                        <SelectValue placeholder="Choose electricity power capacity" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {DAYA_LISTRIK_OPTIONS.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="propertyTipeSertifikat"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="propertyTipeSertifikat">
+                      Certificate Type
+                    </FieldLabel>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger
+                        id="propertyTipeSertifikat"
+                        className={"w-full"}
+                      >
+                        <SelectValue placeholder="Choose property certificate type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SERTIFIKAT_TYPES.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="propertyPerabotan"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="propertyPerabotan">
+                      Furnishing Type
+                    </FieldLabel>
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger
+                        id="propertyPerabotan"
+                        className={"w-full"}
+                      >
+                        <SelectValue placeholder="Choose property furnishing type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {PERABOTAN_TYPES.map((type) => (
+                          <SelectItem key={type} value={type}>
+                            {type}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+          </FieldSet>
+
+          <FieldSeparator />
+
+          <FieldSet>
+            <FieldLegend>Property Address</FieldLegend>
+            <FieldDescription>
+              {mode === "create" ? "Provide" : "Edit"} the address of your the
+              property.
+            </FieldDescription>
+            <FieldGroup>
+              <Controller
+                name="propertyAddressProvince"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="propertyAddressProvince">
+                      Province
+                    </FieldLabel>
+                    <Select
+                      onValueChange={(val) => {
+                        field.onChange(val);
+                        handleProvinceChange(val);
+                        form.setValue("propertyAddressCity", "");
+                      }}
+                      value={field.value ?? ""}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select province" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {provinces.map((p) => (
+                          <SelectItem key={p} value={p}>
+                            {p}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="propertyAddressCity"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="propertyAddressCity">City</FieldLabel>
+                    <Select
+                      onValueChange={(val) => {
+                        field.onChange(val);
+                      }}
+                      value={field.value ?? ""}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select city" />
+                      </SelectTrigger>
+                      <SelectContent className="z-1050">
+                        {cities.map((c) => (
+                          <SelectItem key={c} value={c}>
+                            {c}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <div className="grid grid-cols-2 gap-4">
+                <Controller
+                  name="propertyAddressLat"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="propertyAddressLat">
+                        Latitude
+                      </FieldLabel>
+                      <Input
+                        value={field.value?.toString() ?? ""}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        type="number"
+                        id="propertyAddressLat"
+                        readOnly
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
+                  name="propertyAddressLon"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="propertyAddressLon">
+                        Longitude
+                      </FieldLabel>
+                      <Input
+                        value={field.value?.toString() ?? ""}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        type="number"
+                        id="propertyAddressLon"
+                        readOnly
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </div>
+              <PropertyLeafletMap
+                type="dragable"
+                zoom={initialData !== undefined ? 15 : 4}
+                initialCoordinates={{
+                  lat: (initialData?.propertyAddressLat as number) ?? -2.5,
+                  lon: (initialData?.propertyAddressLon as number) ?? 118.0,
+                }}
+                onChange={(lat, lon) => {
+                  form.setValue("propertyAddressLat", lat);
+                  form.setValue("propertyAddressLon", lon);
+                }}
+              />
+
+              <div className="flex justify-end">
+                <Button type="submit">
+                  {submitLabel ??
+                    (mode === "create" ? "Create Property" : "Save Changes")}
+                </Button>
+              </div>
+            </FieldGroup>
+          </FieldSet>
         </FieldGroup>
       </form>
     </div>

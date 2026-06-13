@@ -1,7 +1,7 @@
 ---
 import AppLayout from "@/layout/AppLayout.astro";
 import MainLayout from "@/layout/MainLayout.astro";
-import {EditPropertyPage} from "@/pages/manage-properties/edit/EditPropertyPage";
+import {EditPropertyPage} from "@/components/form/EditPropertyPage";
 import { PUBLIC_API_URL } from "astro:env/client";
 
 const token = Astro.cookies.get("session")?.value;

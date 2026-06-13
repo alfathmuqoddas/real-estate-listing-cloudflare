@@ -49,7 +49,7 @@ export const PropertyLeafletMap = ({
         center={position}
         zoom={zoom}
         minZoom={4}
-        style={{ height: "100%" }}
+        style={{ height: "100%", zIndex: 10 }}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

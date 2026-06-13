@@ -102,16 +102,20 @@ export const MyPropertiesTable = ({
   token,
   isLoading,
   limit,
+  page,
 }: {
   data: TListings["data"];
   apiUrl: string;
   token?: string;
   isLoading: boolean;
   limit: number;
+  page: number;
 }) => {
   const onEdit = (id: string) => {
     window.location.href = `/manage-properties/edit/${id}`;
   };
+
+  const offset = (page - 1) * limit;
 
   return (
     <Table className="rounded-xl bg-white">
@@ -141,7 +145,7 @@ export const MyPropertiesTable = ({
             ))
           : data?.map((item, index) => (
               <TableRow key={item.id}>
-                <TableCell>{index + 1}</TableCell>
+                <TableCell>{offset + index + 1}</TableCell>
                 <TableCell className="truncate max-w-32" title={item.id}>
                   {item.id}
                 </TableCell>

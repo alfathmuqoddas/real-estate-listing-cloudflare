@@ -80,6 +80,7 @@ export const ManagePropertyPages = ({
               data={myListings?.data ?? []}
               isLoading={isLoading}
               limit={limit}
+              page={page}
               token={token}
               apiUrl={PUBLIC_API_URL}
             />
