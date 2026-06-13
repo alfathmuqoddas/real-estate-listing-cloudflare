@@ -1,4 +1,5 @@
 import type { TListings, TProperty } from "@/types";
+import { apiClient } from "./client";
 
 export async function fetchListings({
   apiUrl,
@@ -8,28 +9,11 @@ export async function fetchListings({
   apiUrl: string;
   searchParams: URLSearchParams;
   token?: string;
-}): Promise<{ data: TListings | null; error: boolean }> {
-  try {
-    const res = await fetch(`${apiUrl}/listings?${searchParams}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!res.ok) throw new Error("Failed to fetch listings");
-
-    return {
-      data: await res.json(),
-      error: false,
-    };
-  } catch (error) {
-    console.error("Fetch failed:", error);
-    return {
-      data: null,
-      error: true,
-    };
-  }
+}) {
+  return apiClient<TListings>(
+    `${apiUrl}/listings?${searchParams.toString()}`,
+    token,
+  );
 }
 
 export async function fetchListingById({
@@ -38,53 +22,21 @@ export async function fetchListingById({
 }: {
   apiUrl: string;
   propertyId: string | undefined;
-}): Promise<{ data: TProperty | null; error: boolean }> {
-  try {
-    const res = await fetch(`${apiUrl}/listings/${propertyId ?? ""}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (!res.ok) throw new Error("Failed to fetch listings");
-    return {
-      data: await res.json(),
-      error: false,
-    };
-  } catch (e) {
-    console.error("Fetch failed:", e);
-    return {
-      data: null,
-      error: true,
-    };
-  }
+}) {
+  return apiClient<TProperty>(`${apiUrl}/listings/${propertyId}`, undefined);
 }
 
 export async function fetchMyListings({
   apiUrl,
+  params,
   token,
 }: {
   apiUrl: string;
+  params: URLSearchParams;
   token?: string;
 }) {
-  try {
-    const res = await fetch(`${apiUrl}/listings/my-properties`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!res.ok) throw new Error("Failed to fetch listings");
-
-    return {
-      data: await res.json(),
-      error: false,
-    };
-  } catch (error) {
-    console.error("Fetch failed:", error);
-    return {
-      data: null,
-      error: true,
-    };
-  }
+  return apiClient<TListings>(
+    `${apiUrl}/listings/my-properties?${params.toString()}`,
+    token,
+  );
 }
