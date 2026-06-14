@@ -2,6 +2,7 @@
 import AppLayout from "@/layout/AppLayout.astro";
 import MainLayout from "@/layout/MainLayout.astro";
 import {AddPropertyPage} from "@/components/form/AddPropertyPage";
+import { PUBLIC_API_URL } from "astro:env/client";
 ---
 <AppLayout>
     <title slot="head">Add New Property | RealEstate by Alfath Muqoddas</title>
@@ -12,6 +13,6 @@ import {AddPropertyPage} from "@/components/form/AddPropertyPage";
             <h1 class="text-2xl font-bold text-primary">Add Property</h1>
             <p class="text-sm text-muted-foreground">Add a new property to the marketplace</p>
         </div>
-        <AddPropertyPage client:only="react" />
+        <AddPropertyPage apiUrl={PUBLIC_API_URL} client:only="react" />
     </MainLayout>
 </AppLayout>

@@ -54,6 +54,7 @@ export const EditPropertyPage = ({
       onSubmit={handleSubmit}
       mode="edit"
       initialData={property}
+      apiUrl={PUBLIC_API_URL}
     />
   );
 };

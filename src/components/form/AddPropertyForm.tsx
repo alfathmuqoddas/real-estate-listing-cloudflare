@@ -27,14 +27,14 @@ import {
   FieldLabel,
   FieldSet,
   FieldSeparator,
+  FieldTitle,
+  FieldContent,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   InputGroup,
   InputGroupInput,
   InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea,
 } from "@/components/ui/input-group";
 import {
   Select,
@@ -44,12 +44,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PropertyLeafletMap } from "../PropertyLeafletMap";
+import { useGetPropertyFeatures } from "@/hooks/useGetPropertyFeatures";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type Props = {
   initialData?: Partial<PropertyFormInput>;
   onSubmit: (values: PropertyFormOutput) => Promise<void> | void;
   mode: "create" | "edit";
   submitLabel?: string;
+  apiUrl: string;
 };
 
 export const AddPropertyForm: React.FC<Props> = ({
@@ -57,6 +60,7 @@ export const AddPropertyForm: React.FC<Props> = ({
   mode,
   submitLabel,
   onSubmit,
+  apiUrl,
 }) => {
   const defaultValues: PropertyFormInput = {
     propertyType: "rumah",
@@ -104,6 +108,23 @@ export const AddPropertyForm: React.FC<Props> = ({
   const handleFormSubmit = async (values: PropertyFormOutput) => {
     await onSubmit(values);
   };
+
+  const {
+    propertyFeatures,
+    isLoading: isLoadingPropertyFeatures,
+    error: isErrorPropertyFeatures,
+  } = useGetPropertyFeatures({
+    apiUrl,
+  });
+
+  const selectedPropertyType = form.watch("propertyType");
+
+  const filteredFeatures =
+    propertyFeatures?.filter(
+      (feature) => feature.featurePropertyType === selectedPropertyType,
+    ) ?? [];
+
+  // console.log(filteredFeatures);
 
   return (
     <div className="p-4 bg-white rounded-lg shadow">
@@ -519,6 +540,61 @@ export const AddPropertyForm: React.FC<Props> = ({
                   </Field>
                 )}
               />
+              <Field>
+                <FieldLabel>Features</FieldLabel>
+                {isLoadingPropertyFeatures ? (
+                  <div className="flex justify-center">Loading...</div>
+                ) : isErrorPropertyFeatures ? (
+                  <div className="flex justify-center">
+                    <p>Error fetching property features</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
+                    {filteredFeatures.map((feature) => (
+                      <Controller
+                        key={feature.id}
+                        name="propertyFeatures"
+                        control={form.control}
+                        render={({ field }) => {
+                          const isChecked = field.value?.includes(
+                            feature.id.toString(),
+                          );
+                          return (
+                            <FieldLabel>
+                              <Field orientation="horizontal">
+                                <Checkbox
+                                  checked={isChecked}
+                                  id={feature.id.toString()}
+                                  onCheckedChange={(checked) => {
+                                    const currentValues = field.value ?? [];
+                                    return checked
+                                      ? field.onChange([
+                                          ...currentValues,
+                                          feature.id.toString(),
+                                        ])
+                                      : field.onChange(
+                                          field.value?.filter(
+                                            (value) =>
+                                              value !== feature.id.toString(),
+                                          ),
+                                        );
+                                  }}
+                                />
+                                <FieldContent>
+                                  <FieldTitle>{feature.featureIcon}</FieldTitle>
+                                  <FieldDescription>
+                                    {feature.featureName}
+                                  </FieldDescription>
+                                </FieldContent>
+                              </Field>
+                            </FieldLabel>
+                          );
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </Field>
             </FieldGroup>
           </FieldSet>
 
