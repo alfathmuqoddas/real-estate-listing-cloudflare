@@ -95,6 +95,16 @@ export type TProperty = Property & {
   favorites: Array<{ id: string }>;
 } & { features: Array<PropertyFeature> };
 
+export type TPropertyFeatures = {
+  id: number;
+  featureName: string;
+  featureIcon: string;
+  featurePropertyType: string;
+  featureSubtype: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export interface UserContext {
   uid: string;
   email: string;
