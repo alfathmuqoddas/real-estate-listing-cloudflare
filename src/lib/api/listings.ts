@@ -63,3 +63,22 @@ export async function addListing({
     token,
   });
 }
+
+export async function editListing({
+  apiUrl,
+  propertyId,
+  data,
+  token,
+}: {
+  apiUrl: string;
+  propertyId: string | undefined;
+  data: TProperty;
+  token?: string;
+}) {
+  return apiClient<TProperty, TProperty>({
+    url: `${apiUrl}/listings/${propertyId}`,
+    method: "PUT",
+    body: data,
+    token,
+  });
+}

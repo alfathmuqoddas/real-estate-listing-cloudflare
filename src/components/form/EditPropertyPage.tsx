@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { AddPropertyForm } from "@/components/form/AddPropertyForm";
+import { fetchListingById, editListing } from "@/lib/api/listings";
+import { toast } from "sonner";
 
 export const EditPropertyPage = ({
   propertyId,
@@ -12,41 +14,51 @@ export const EditPropertyPage = ({
 }) => {
   const [property, setProperty] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<any>(null);
 
   useEffect(() => {
-    const fetchProperty = async () => {
-      const res = await fetch(`${PUBLIC_API_URL}/listings/${propertyId}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+    const res = async () => {
+      setIsLoading(true);
+      const { data, error, status } = await fetchListingById({
+        apiUrl: PUBLIC_API_URL,
+        propertyId,
       });
 
-      if (!res.ok) {
-        console.error("Failed to fetch property");
-        setError(res.statusText);
-        return;
+      if (error) {
+        if (status === 401) {
+          window.location.href = "/login";
+        }
+        toast.error(`Error fetching property (status ${status})`);
+        setProperty(null);
+      } else {
+        setProperty(data);
       }
 
-      const data = await res.json();
-      setProperty(data);
       setIsLoading(false);
     };
 
-    fetchProperty();
-  }, [propertyId, token]);
+    res();
+  }, [propertyId]);
 
   const handleSubmit = async (values: any) => {
-    console.log(values);
+    const { error, status } = await editListing({
+      apiUrl: PUBLIC_API_URL,
+      propertyId,
+      data: values,
+      token,
+    });
+
+    if (error) {
+      if (status === 401) {
+        window.location.href = "/login";
+      }
+      toast.error(`Error editing property (status ${status})`);
+    } else {
+      toast.success("Property successfully edited");
+    }
   };
 
   if (isLoading) {
     return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
   }
 
   return (
