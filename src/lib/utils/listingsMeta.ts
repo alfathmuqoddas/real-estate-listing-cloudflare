@@ -8,7 +8,7 @@ export function buildListingMeta({
 }: {
   listings: TListings | null;
   query: PropertyQuery;
-  fetchError: boolean;
+  fetchError: Error | null;
 }) {
   const isApartemen = query.type === "apartemen";
   const isRent = query.listingType === "rent";
