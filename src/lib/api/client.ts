@@ -5,9 +5,9 @@ export interface ApiClientOptions<K> {
   token?: string;
 }
 
-export interface ApiResponse<T> {
+export interface ApiResponse<T, E = Error> {
   data: T | null;
-  error: boolean;
+  error: E | null;
   status?: number;
 }
 
@@ -16,7 +16,7 @@ export const apiClient = async <T, K = unknown>({
   method = "GET",
   body,
   token,
-}: ApiClientOptions<K>): Promise<ApiResponse<T>> => {
+}: ApiClientOptions<K>): Promise<ApiResponse<T, Error>> => {
   try {
     const hasBody = body && !["GET", "HEAD"].includes(method);
 
@@ -32,18 +32,26 @@ export const apiClient = async <T, K = unknown>({
     const status = res.status;
 
     if (!res.ok) {
-      return { data: null, error: true, status };
+      return {
+        data: null,
+        error: new Error(`HTTP Error ${status}: ${res.statusText}`),
+        status,
+      };
     }
 
     // Handle 204 No Content or empty responses safely
     if (status === 204) {
-      return { data: null, error: false, status };
+      return { data: null, error: null, status };
     }
 
     const data: T = await res.json();
-    return { data, error: false, status };
+    return { data, error: null, status };
   } catch (err) {
     console.error("Fetch failed:", err);
-    return { data: null, error: true, status: undefined };
+    return {
+      data: null,
+      error: err instanceof Error ? err : new Error("Unknown network error"),
+      status: undefined,
+    };
   }
 };
