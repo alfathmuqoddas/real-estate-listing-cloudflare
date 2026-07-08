@@ -35,6 +35,7 @@ export async function verifyToken(token: string) {
       email: payload.email as string,
       name: (payload.name as string) || "Anonymous",
       photoUrl: (payload.picture as string) || "",
+      role: payload.role as "admin" | "user" | "agent",
     };
   } catch (err: any) {
     console.error("❌ JWT Verification Failed:", err.message);

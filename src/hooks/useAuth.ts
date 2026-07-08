@@ -9,6 +9,7 @@ export const useAuth = () => {
       // PHASE 1: FIREBASE
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken(true);
+      const refreshToken = result.user.refreshToken;
 
       console.log("Firebase success, syncing session...");
 
@@ -16,7 +17,7 @@ export const useAuth = () => {
       const response = await fetch("/api/auth/session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token }),
+        body: JSON.stringify({ token, refreshToken }),
       });
 
       if (!response.ok) {

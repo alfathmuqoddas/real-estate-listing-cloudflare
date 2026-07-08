@@ -1,10 +1,11 @@
+//pages/api/auth/session.ts
 import { verifyToken } from "@/lib/utils";
 import type { APIRoute } from "astro";
 import { PUBLIC_API_URL } from "astro:env/client";
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {
-    const { token } = await request.json();
+    const { token, refreshToken } = await request.json();
 
     if (!token) {
       return new Response(JSON.stringify({ error: "No token provided" }), {
@@ -26,7 +27,15 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       httpOnly: true,
       secure: import.meta.env.PROD,
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 5,
+      maxAge: 60 * 60,
+    });
+
+    cookies.set("refreshToken", refreshToken, {
+      path: "/",
+      httpOnly: true,
+      secure: import.meta.env.PROD,
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 30,
     });
 
     await fetch(`${PUBLIC_API_URL}/users/sync`, {
