@@ -39,21 +39,22 @@ const {
 
 ---
 <AppLayout>
-    <title slot="head">{pageTitle}</title>
-    <meta slot="head" name="og:title" content={pageTitle} />
-    <meta slot="head" name="description" content={pageTitle} />
+    <Fragment slot="head">
+    <title>{pageTitle}</title>
+    <meta name="og:title" content={pageTitle} />
+    <meta name="description" content={pageTitle} />
     <!-- opengraph meta -->
-     <meta slot="head" property="og:type" content="website" />
-    <meta slot="head" property="og:url" content={Astro.url} />
-    <meta slot="head" property="og:title" content={pageTitle} />
-    <meta slot="head" property="og:description" content={pageTitle} />
+     <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageTitle} />
 
     <!-- twitter meta -->
-    <meta slot="head" property="twitter:card" content="summary_large_image" />
-    <meta slot="head" property="twitter:url" content={Astro.url} />
-    <meta slot="head" property="twitter:title" content={pageTitle} />
-    <meta slot="head" property="twitter:description" content={pageTitle} />
-
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={pageTitle} />
+    <meta property="twitter:description" content={pageTitle} />
+    </Fragment>
     <MainLayout>
     <div>
     

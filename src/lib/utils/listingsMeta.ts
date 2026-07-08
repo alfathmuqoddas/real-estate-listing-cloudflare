@@ -48,7 +48,7 @@ export function listingDetailMeta({
   fetchError,
 }: {
   property: TProperty | null;
-  fetchError: boolean;
+  fetchError: boolean | Error | null;
 }) {
   if (fetchError || !property) {
     return {

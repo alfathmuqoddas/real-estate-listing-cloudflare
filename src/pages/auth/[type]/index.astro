@@ -19,9 +19,11 @@ const pageTitle = `${capitalisedType} | RealEstate by Alfath Muqoddas`;
 
 ---
 <AppLayout>
-    <title slot="head">{pageTitle}</title>
-    <meta slot="head" name="og:title" content={pageTitle} />
-    <meta slot="head" name="description" content={pageTitle} />
+    <Fragment slot="head">
+      <title>{pageTitle}</title>
+      <meta name="og:title" content={pageTitle} />
+      <meta name="description" content={pageTitle} />
+    </Fragment>
     <MainLayout>
     <section class="flex items-center justify-center min-h-[calc(100vh-12rem)]">
         <div class="w-full max-w-sm">

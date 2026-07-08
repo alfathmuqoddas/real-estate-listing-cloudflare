@@ -4,35 +4,36 @@ import MainLayout from "@/layout/MainLayout.astro";
 import { AddressPicker } from "@/components/HomeSearchDropdown";
 ---
 <AppLayout>
-	<title slot="head">Find your future home | RealEstate by Alfath Muqoddas</title>
-	<meta slot="head" name="title" content="Find your future home | RealEstate by Alfath Muqoddas" />
-	<meta slot="head" name="description" content="Find your future home | RealEstate by Alfath Muqoddas" />
-	<!-- opengraph meta -->
-	 <meta slot="head" property="og:type" content="website" />
-	<meta slot="head" property="og:url" content={Astro.url.origin} />
-	<meta slot="head" property="og:title" content="Find your future home | RealEstate by Alfath Muqoddas" />
-	<meta slot="head" property="og:description" content="Find your future home | RealEstate by Alfath Muqoddas" />
+	<Fragment slot="head">
+		<title>Find your future home | RealEstate by Alfath Muqoddas</title>
+		<meta name="title" content="Find your future home | RealEstate by Alfath Muqoddas" />
+		<meta name="description" content="Find your future home | RealEstate by Alfath Muqoddas" />
+		<!-- opengraph meta -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={Astro.url.origin} />
+		<meta property="og:title" content="Find your future home | RealEstate by Alfath Muqoddas" />
+		<meta property="og:description" content="Find your future home | RealEstate by Alfath Muqoddas" />
 
-	<!-- twitter meta -->
-	<meta slot="head" property="twitter:card" content="summary_large_image" />
-	<meta slot="head" property="twitter:url" content={Astro.url.origin} />
-	<meta slot="head" property="twitter:title" content="Find your future home | RealEstate by Alfath Muqoddas" />
-	<meta slot="head" property="twitter:description" content="Find your future home | RealEstate by Alfath Muqoddas" />
-<MainLayout>
-	<figure class="rounded-3xl overflow-x-hidden relative">
-		<img src="https://images.unsplash.com/photo-1670589953882-b94c9cb380f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wyNTgzNzB8MHwxfGFsbHx8fHx8fHx8fDE3NzcwNDU3NDB8&ixlib=rb-4.1.0&q=80&w=1920"
-		 	 width="1920" 
-			 height="1080" 
-			 class="brightness-80 h-120 max-w-none object-cover object-center"
-		/>
-		<div class="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center p-4">
-			<div>
-			<h1 class="text-white text-3xl tracking-tighter font-bold ">FIND YOUR FUTURE HOME</h1>
-			<p class="text-white font-bold">Experience the art of living in spaces designed for your life's next chapter. Curated by experts, built for you.</p>
-
-				<AddressPicker client:load />
+		<!-- twitter meta -->
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta property="twitter:url" content={Astro.url.origin} />
+		<meta property="twitter:title" content="Find your future home | RealEstate by Alfath Muqoddas" />
+		<meta property="twitter:description" content="Find your future home | RealEstate by Alfath Muqoddas" />
+	</Fragment>
+	<MainLayout>
+		<figure class="rounded-3xl overflow-x-hidden relative">
+			<img src="https://images.unsplash.com/photo-1670589953882-b94c9cb380f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wyNTgzNzB8MHwxfGFsbHx8fHx8fHx8fDE3NzcwNDU3NDB8&ixlib=rb-4.1.0&q=80&w=1920"
+				width="1920" 
+				height="1080" 
+				class="brightness-80 h-120 max-w-none object-cover object-center"
+			/>
+			<div class="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center p-4">
+				<div>
+					<h1 class="text-white text-3xl tracking-tighter font-bold ">FIND YOUR FUTURE HOME</h1>
+					<p class="text-white font-bold">Experience the art of living in spaces designed for your life's next chapter. Curated by experts, built for you.</p>
+					<AddressPicker client:load />
+				</div>
 			</div>
-		</div>
-	</figure>
-</MainLayout>
+		</figure>
+	</MainLayout>
 </AppLayout>
