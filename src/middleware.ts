@@ -1,4 +1,5 @@
 import { defineMiddleware } from "astro:middleware";
+import { verifyToken } from "@/lib/utils";
 
 const protectedRoutes = ["/listings/create", "/listings/edit"];
 
@@ -13,24 +14,24 @@ export const onRequest = defineMiddleware(async (context, next) => {
   );
 
   if (isProtected && !token) {
-    return context.redirect("/auth/login?reason=unauthorized");
+    return redirect("/auth/login?reason=unauthorized");
   }
 
   if (token) {
     try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
+      const user = await verifyToken(token);
 
-      locals.user = {
-        uid: payload.sub,
-        email: payload.email,
-        name: payload.name,
-        photoUrl: payload.picture,
-        role: payload.role,
-      };
+      if (user) {
+        locals.user = user;
+      } else {
+        cookies.delete("session", { path: "/" });
+        if (isProtected) {
+          return redirect("/auth/login?reason=invalid-token");
+        }
+      }
     } catch (error) {
       console.error("JWT Verification failed:", error);
       cookies.delete("session", { path: "/" });
-
       if (isProtected) {
         return redirect("/auth/login?reason=invalid-token");
       }
