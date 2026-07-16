@@ -1,0 +1,9 @@
+packages:
+  - "."
+onlyBuiltDependencies:
+  - "@firebase/util"
+  - esbuild
+  - msw
+  - protobufjs
+  - sharp
+  - workerd
