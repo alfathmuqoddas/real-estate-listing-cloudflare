@@ -9,7 +9,14 @@ export const POST: APIRoute = async ({ request }) => {
 
   if (!apiKey) {
     return new Response(
-      JSON.stringify({ error: "Server configuration error" }),
+      JSON.stringify({ error: "Server configuration error: no API key" }),
+      { status: 500 },
+    );
+  }
+
+  if (!imgbbApiUrl) {
+    return new Response(
+      JSON.stringify({ error: "Server configuration error: no ImgBB API URL" }),
       { status: 500 },
     );
   }
