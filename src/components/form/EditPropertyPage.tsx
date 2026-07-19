@@ -12,6 +12,8 @@ export const EditPropertyPage = ({
   token?: string;
   PUBLIC_API_URL: string;
 }) => {
+  const [files, setFiles] = useState<File[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [property, setProperty] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -67,6 +69,9 @@ export const EditPropertyPage = ({
       mode="edit"
       initialData={property}
       apiUrl={PUBLIC_API_URL}
+      files={files}
+      setFiles={setFiles}
+      isSubmitting={isSubmitting}
     />
   );
 };

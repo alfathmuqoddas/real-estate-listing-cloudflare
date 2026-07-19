@@ -95,6 +95,11 @@ export type TProperty = Property & {
   favorites: Array<{ id: string }>;
 } & { features: Array<PropertyFeature> };
 
+export type TInputProperty = Partial<Property> & {
+  propertyImages: string[];
+  propertyFeatures: string[];
+};
+
 export type TPropertyFeatures = {
   id: number;
   featureName: string;

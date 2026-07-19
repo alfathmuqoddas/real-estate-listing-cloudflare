@@ -1,4 +1,4 @@
-import type { TListings, TProperty } from "@/types";
+import type { TListings, TProperty, TInputProperty } from "@/types";
 import { apiClient } from "./client";
 
 export async function fetchListings({
@@ -53,11 +53,11 @@ export async function addListing({
   token,
 }: {
   apiUrl: string;
-  data: TProperty;
+  data: TInputProperty;
   token?: string;
 }) {
-  return apiClient<TProperty, TProperty>({
-    url: `${apiUrl}/listings/`,
+  return apiClient<TProperty, TInputProperty>({
+    url: `${apiUrl}/listings`,
     method: "POST",
     body: data,
     token,

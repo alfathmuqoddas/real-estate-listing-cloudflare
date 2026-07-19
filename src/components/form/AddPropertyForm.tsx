@@ -46,6 +46,7 @@ import {
 import { PropertyLeafletMap } from "../PropertyLeafletMap";
 import { useGetPropertyFeatures } from "@/hooks/useGetPropertyFeatures";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ImageDropzone } from "./ImageDropzone";
 
 type Props = {
   initialData?: Partial<PropertyFormInput>;
@@ -53,6 +54,9 @@ type Props = {
   mode: "create" | "edit";
   submitLabel?: string;
   apiUrl: string;
+  files: File[];
+  setFiles: (files: File[] | ((prev: File[]) => File[])) => void;
+  isSubmitting: boolean;
 };
 
 export const AddPropertyForm: React.FC<Props> = ({
@@ -61,6 +65,9 @@ export const AddPropertyForm: React.FC<Props> = ({
   submitLabel,
   onSubmit,
   apiUrl,
+  files,
+  setFiles,
+  isSubmitting,
 }) => {
   const defaultValues: PropertyFormInput = {
     propertyType: "rumah",
@@ -600,6 +607,10 @@ export const AddPropertyForm: React.FC<Props> = ({
 
           <FieldSeparator />
 
+          <ImageDropzone files={files} setFiles={setFiles} />
+
+          <FieldSeparator />
+
           <FieldSet>
             <FieldLegend>Property Address</FieldLegend>
             <FieldDescription>
@@ -727,7 +738,7 @@ export const AddPropertyForm: React.FC<Props> = ({
               />
 
               <div className="flex justify-end">
-                <Button type="submit">
+                <Button type="submit" disabled={isSubmitting}>
                   {submitLabel ??
                     (mode === "create" ? "Create Property" : "Save Changes")}
                 </Button>
