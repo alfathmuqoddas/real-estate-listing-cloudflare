@@ -4,7 +4,7 @@ import MainLayout from "@/layout/MainLayout.astro";
 import CardCarousel from "@/components/EmblaCardCarousel";
 import { Bed, Bath } from "lucide-react";
 import Pagination from "@/components/pagination"
-import { PUBLIC_API_URL } from "astro:env/client";
+import { PUBLIC_API_URL } from "@/constant"
 import { FavoritesToggle } from "@/components/FavoritesToggle";
 import { parsePropertyQuery } from "@/lib/query/listings";
 import { fetchListings } from "@/lib/api/listings";

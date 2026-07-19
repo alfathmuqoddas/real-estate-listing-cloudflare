@@ -1,7 +1,7 @@
 //pages/api/auth/session.ts
 import { verifyToken } from "@/lib/utils";
 import type { APIRoute } from "astro";
-import { PUBLIC_API_URL } from "astro:env/client";
+import { PUBLIC_API_URL } from "@/constant";
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {

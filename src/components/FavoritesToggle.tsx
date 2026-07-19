@@ -1,7 +1,7 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Heart } from "lucide-react";
 import { toast } from "sonner";
-import { PUBLIC_API_URL } from "astro:env/client";
+import { PUBLIC_API_URL } from "@/constant";
 
 export const FavoritesToggle = ({
   initialFavorite,

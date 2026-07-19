@@ -8,12 +8,6 @@ import cloudflare from "@astrojs/cloudflare";
 import react from "@astrojs/react";
 
 export default defineConfig({
-  env: {
-    schema: {
-      PUBLIC_API_URL: envField.string({ context: "client", access: "public" }),
-    },
-  },
-
   vite: {
     plugins: [tailwindcss()],
     optimizeDeps: {

@@ -10,7 +10,4 @@
   "observability": {
     "enabled": true,
   },
-  "vars": {
-    "PUBLIC_API_URL": "http://real-estate-hono.alfath-muqoddas.workers.dev",
-  },
 }
